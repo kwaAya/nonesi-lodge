@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nonesi Lodge | B&amp;B &amp; Self-Catering Accommodation in Komani, Queenstown</title>
+<meta name="description" content="Comfortable B&amp;B and self-catering accommodation in Southbourne, Komani (Queenstown), Eastern Cape. Family rooms, garden views, outdoor pool, free Wi-Fi and convenient access to local attractions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Custom font ── */
+@font-face {
+  font-family: 'Geraldine';
+  src: url('fonts/Geraldine.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ── Design tokens ── */
+:root {
+  --bg: #FBF9F5;
+  --surface: #EFECE6;
+  --ink: #2B2D2F;
+  --muted: #5C615E;
+  --green: #2C4235;
+  --gold: #C86D51;
+  --gold-hover: #B35A3E;
+  --on-green: #FBF9F5;
+  --line: rgba(44,66,53,0.12);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17201a;
+    --surface: #1f2b23;
+    --ink: #e8ede6;
+    --muted: #a3b1a8;
+    --green: #0f1a12;
+    --gold: #e08a6a;
+    --gold-hover: #c4714f;
+    --on-green: #e8ede6;
+    --line: rgba(255,255,255,0.1);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17201a;
+  --surface: #1f2b23;
+  --ink: #e8ede6;
+  --muted: #a3b1a8;
+  --green: #0f1a12;
+  --gold: #e08a6a;
+  --gold-hover: #c4714f;
+  --on-green: #e8ede6;
+  --line: rgba(255,255,255,0.1);
+  color-scheme: dark;
+}
+
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+/* Linen texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 0;
+}
+
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.12;
+  margin: 0 0 .5em;
+}
+p { margin: 0 0 1em; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 22px; }
+
+/* ── Tracking labels ── */
+.tracking-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #5C615E;
+  margin: 0 0 10px;
+  display: block;
+}
+
+/* ── Navbar ── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  color: #FBF9F5;
+}
+.nav-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  align-items: center;
+  padding: 16px 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.nav-brand {
+  font-family: 'Geraldine', cursive;
+  font-size: 1.6rem;
+  font-weight: normal;
+  margin-right: auto;
+  text-decoration: none;
+  color: inherit;
+}
+nav a {
+  text-decoration: none;
+  opacity: .85;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+nav a:hover { opacity: 1; }
+.nav-phone {
+  font-size: 13px;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* ── Hero ── */
+.hero {
+  background: var(--green);
+  color: var(--on-green);
+  min-height: 90vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(28,42,34,0.5), rgba(28,42,34,0.8));
+  z-index: 1;
+  pointer-events: none;
+}
+.hero .wrap {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 24px;
+  align-items: end;
+  padding: 40px 0 0;
+  flex: 1;
+}
+.hero-txt {
+  padding-top: 90px;
+  padding-bottom: 64px;
+}
+.hero-greeting {
+  font-family: 'Geraldine', cursive;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: rgba(251,249,245,0.9);
+  margin: 0 0 0.5rem;
+  line-height: 1.1;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.8rem, 7vw, 5rem);
+  margin: 0 0 .4em;
+  color: var(--on-green);
+}
+.hero p { max-width: 44ch; opacity: .92; }
+.art { width: 100%; height: auto; display: block; }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.btn {
+  display: inline-block;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  text-decoration: none;
+  background: var(--gold);
+  color: #fff;
+  border: 2px solid var(--gold);
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn:hover { background: var(--gold-hover); border-color: var(--gold-hover); }
+.btn.ghost { background: transparent; color: inherit; border-color: currentColor; }
+.btn.ghost:hover { background: rgba(255,255,255,0.1); }
+
+/* ── Sections ── */
+section { padding: 72px 0; }
+.lead { max-width: 60ch; color: var(--muted); font-family: 'Plus Jakarta Sans', sans-serif; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.big {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  line-height: 1.3;
+  max-width: 24ch;
+}
+ul.ticks { list-style: none; padding: 0; margin: 0; }
+ul.ticks li {
+  padding: 10px 0 10px 32px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+}
+ul.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 15px;
+  width: 14px;
+  height: 14px;
+  background: var(--gold);
+  border-radius: 0 100% 0 100%;
+  transform: rotate(-8deg);
+}
+.band {
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ── Location distances ── */
+.dist {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+}
+.dist span:last-child { color: var(--muted); text-align: right; }
+
+/* ── Gallery bento grid ── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 32px;
+}
+.gallery-item {
+  background: #EFECE6;
+  border-radius: 12px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(44,66,53,0.1);
+}
+.gallery-item--large {
+  grid-column: span 2;
+  min-height: 320px;
+}
+.gallery-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: #2C4235;
+  text-align: center;
+  padding: 1rem;
+}
+@media (max-width: 768px) {
+  .gallery-grid { grid-template-columns: 1fr; }
+  .gallery-item--large { grid-column: span 1; }
+}
+
+/* ── Booking form ── */
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px;
+}
+label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.full { grid-column: 1 / -1; }
+input, textarea, select {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  width: 100%;
+}
+button.btn { cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; justify-self: start; }
+address { font-style: normal; }
+
+/* ── FAQ accordion ── */
+.faq-list { margin-top: 28px; }
+.faq-item {
+  border: 1px solid rgba(44,66,53,0.15);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 18px 20px;
+  text-align: left;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  color: #2C4235;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faq-question::after { content: '+'; font-size: 1.4rem; color: #C86D51; }
+.faq-item.open .faq-question::after { content: '−'; }
+.faq-answer {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  color: #2B2D2F;
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+.faq-item.open .faq-answer { max-height: 200px; padding: 0 20px 18px; }
+.faq-item.open { background: #FBF9F5; }
+
+/* ── Footer ── */
+footer {
+  background: #2C4235;
+  color: #FBF9F5;
+  padding: 48px 0 24px;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.footer-brand {
+  font-family: 'Geraldine', cursive;
+  font-size: 1.8rem;
+  color: #FBF9F5;
+  margin: 0 0 12px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+.footer-grid address { font-style: normal; opacity: 0.85; line-height: 1.7; }
+.footer-grid a { color: #C86D51; text-decoration: none; }
+.footer-grid a:hover { text-decoration: underline; }
+.footer-grid p { margin: 0 0 6px; }
+.footer-copy {
+  border-top: 1px solid rgba(251,249,245,0.15);
+  padding-top: 20px;
+  margin-top: 0;
+  opacity: 0.6;
+  font-size: 13px;
+}
+@media (max-width: 760px) { .footer-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+/* ── Room cards ── */
+.room-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+.room-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.room-card h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  margin: 0;
+  color: var(--green);
+}
+.room-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.room-specs span {
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 4px 11px;
+  white-space: nowrap;
+}
+.room-amenities {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.room-amenities li::before { content: "✓ "; color: var(--gold); font-weight: 700; }
+.room-select-btn {
+  margin-top: auto;
+  display: inline-block;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: background 0.2s;
+}
+.room-select-btn:hover { background: var(--gold-hover); }
+@media (max-width: 760px) { .room-grid { grid-template-columns: 1fr; } }
+
+/* ── Mobile CTA bar ── */
+.mobile-cta-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  background: #C86D51;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.mobile-cta-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+.mobile-cta-btn:last-child { border-right: none; }
+.mobile-cta-btn:hover { background: rgba(0,0,0,0.1); }
+@media (min-width: 761px) { .mobile-cta-bar { display: none; } }
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  .hero-grid, .cols, form { grid-template-columns: 1fr; }
+  .hero-txt { padding-bottom: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Hidden SVG defs (kept for potential reuse) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<path id="lf" d="M0 0C-10 -26 -8 -58 0 -84C8 -58 10 -26 0 0Z"/>
+<g id="aloe"><use href="#lf" transform="rotate(-62)"/><use href="#lf" transform="rotate(-42)"/><use href="#lf" transform="rotate(-21)"/><use href="#lf"/><use href="#lf" transform="rotate(21)"/><use href="#lf" transform="rotate(42)"/><use href="#lf" transform="rotate(62)"/></g>
+</defs></svg>
+
+<!-- ── Fixed Navbar ── -->
+<nav aria-label="Main">
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand" aria-label="Nonesi Lodge home">Nonesi Lodge</a>
+      <a href="#about">About</a>
+      <a href="#rooms">Rooms</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#location">Location</a>
+      <a href="#faq">FAQ</a>
+      <a href="#book">Book</a>
+      <a class="nav-phone" href="tel:+27725703772" aria-label="Call 072 570 3772">072 570 3772</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-txt">
+        <p class="hero-greeting">Molo, wamkelekile</p>
+        <h1>Welcome to Nonesi Lodge, in the heart of Komani.</h1>
+        <p>A relaxed B&amp;B and self-catering stay in Queenstown, Eastern Cape. For families, business travellers, and anyone passing through who'd rather stay somewhere that feels like home.</p>
+        <div class="btns">
+          <a class="btn" href="#book">Request your stay</a>
+          <a class="btn ghost" href="tel:+27725703772">Call 072 570 3772</a>
+        </div>
+      </div>
+      <svg class="art" viewBox="0 0 400 340" role="img" aria-label="Illustration of a sunset over hills with aloes in flower">
+        <defs><radialGradient id="g" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e9a73a" stop-opacity=".95"/><stop offset="1" stop-color="#e9a73a" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="230" cy="170" r="170" fill="url(#g)"/>
+        <circle cx="230" cy="170" r="70" fill="#e9a73a"/>
+        <path d="M0 250C60 200 120 215 190 238C260 255 330 205 400 232V340H0Z" fill="#2c5640"/>
+        <path d="M0 290C90 258 170 288 250 276C320 266 360 280 400 272V340H0Z" fill="#16301f"/>
+        <g fill="#0f2418"><use href="#aloe" transform="translate(96,318) scale(1.15)"/><use href="#aloe" transform="translate(300,326) scale(.9)"/><use href="#aloe" transform="translate(190,332) scale(.7)"/></g>
+        <g stroke="#0f2418" stroke-width="4" stroke-linecap="round" fill="none"><path d="M96 296V196"/><path d="M300 308V222"/></g>
+        <g fill="#f08a2c"><ellipse cx="96" cy="190" rx="6" ry="14"/><ellipse cx="88" cy="204" rx="5" ry="12" transform="rotate(-20 88 204)"/><ellipse cx="104" cy="204" rx="5" ry="12" transform="rotate(20 104 204)"/><ellipse cx="300" cy="216" rx="5" ry="12"/><ellipse cx="293" cy="228" rx="4" ry="10" transform="rotate(-20 293 228)"/><ellipse cx="307" cy="228" rx="4" ry="10" transform="rotate(20 307 228)"/></g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <div class="wrap cols">
+      <p class="big">Friendly accommodation, practical comfort, and a convenient Komani location.</p>
+      <div>
+        <span class="tracking-label">SOUTHBOURNE · KOMANI</span>
+        <div class="lead">
+          <p>Nonesi Lodge is a B&amp;B and self-catering lodge in Southbourne. Friendly staff and a relaxed, homely feel mean you're welcomed rather than just checked in. We offer an outdoor swimming pool, a well-groomed garden and terrace, and an intimate function venue setup — whether you're here for work, a family occasion, or a stop on an Eastern Cape journey.</p>
+          <p>Garden surroundings, a quieter lodge-style setting, and Queenstown's shops, restaurants and business areas close by.</p>
+        </div>
+        <ul class="ticks" style="margin-top:20px">
+          <li>Outdoor swimming pool</li>
+          <li>Well-groomed garden &amp; terrace</li>
+          <li>Intimate event / function venue setup</li>
+          <li>B&amp;B and self-catering stays</li>
+          <li><strong>Check-in</strong> from 14:00 &nbsp;|&nbsp; <strong>Check-out</strong> by 11:00</li>
+          <li>Free private parking &amp; free Wi-Fi in all areas</li>
+          <li>Daily housekeeping, laundry &amp; ironing services</li>
+          <li>Security alarm &amp; non-smoking rooms (smoking area available)</li>
+          <li>Payments: Visa, Mastercard, Maestro &amp; cashless — no cash on-site</li>
+          <li>Family-friendly &mdash; no bachelor/bachelorette parties</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Rooms ── -->
+  <section id="rooms" class="band">
+    <div class="wrap">
+      <span class="tracking-label">ACCOMMODATION</span>
+      <h2>Rooms that make it easy to settle in</h2>
+      <p class="lead">Made for couples, families and business guests. Put the kettle on, keep your food cold, get some work done, then shut the door on a private bathroom. Rates depend on room and dates — ask us for a quote.</p>
+      <div class="btns" style="margin-bottom:12px"><a class="btn" href="#book">Check availability</a></div>
+      <div class="room-grid">
+
+        <div class="room-card">
+          <h3>Double or Twin Room</h3>
+          <div class="room-specs">
+            <span>Sleeps 2</span><span>16 m&sup2;</span><span>1 Bedroom</span><span>1 Private Bathroom</span>
+          </div>
+          <ul class="room-amenities">
+            <li>Garden view &amp; private terrace</li>
+            <li>Refrigerator &amp; microwave</li>
+            <li>Tea/coffee maker &amp; electric kettle</li>
+            <li>Flat-screen TV &amp; work desk</li>
+            <li>Free Wi-Fi</li>
+          </ul>
+          <button class="room-select-btn" onclick="selectRoom('Double or Twin Room')">Select Room</button>
+        </div>
+
+        <div class="room-card">
+          <h3>Deluxe Double Room with Shower</h3>
+          <div class="room-specs">
+            <span>Sleeps 2</span><span>16 m&sup2;</span><span>1 Bedroom</span><span>Private Bathroom with Shower</span>
+          </div>
+          <ul class="room-amenities">
+            <li>Refrigerator &amp; microwave</li>
+            <li>Tea/coffee maker &amp; electric kettle</li>
+            <li>Flat-screen TV &amp; work desk</li>
+            <li>Safety deposit box</li>
+            <li>Free Wi-Fi</li>
+          </ul>
+          <button class="room-select-btn" onclick="selectRoom('Deluxe Double Room with Shower')">Select Room</button>
+        </div>
+
+        <div class="room-card">
+          <h3>Family Room with Shower</h3>
+          <div class="room-specs">
+            <span>Sleeps 3</span><span>20 m&sup2;</span><span>1 Bedroom</span><span>Private Bathroom with Shower</span>
+          </div>
+          <ul class="room-amenities">
+            <li>Garden view</li>
+            <li>Refrigerator &amp; microwave</li>
+            <li>Tea/coffee maker &amp; electric kettle</li>
+            <li>Flat-screen TV &amp; work desk</li>
+            <li>Free Wi-Fi</li>
+          </ul>
+          <button class="room-select-btn" onclick="selectRoom('Family Room with Shower')">Select Room</button>
+        </div>
+
+        <div class="room-card">
+          <h3>Family Room</h3>
+          <div class="room-specs">
+            <span>Sleeps 4 (up to 4 children)</span><span>22 m&sup2;</span><span>1 Bedroom</span><span>1 Private Bathroom</span>
+          </div>
+          <ul class="room-amenities">
+            <li>Private terrace</li>
+            <li>Refrigerator &amp; microwave</li>
+            <li>Tea/coffee maker &amp; electric kettle</li>
+            <li>Flat-screen TV &amp; work desk</li>
+            <li>Free Wi-Fi</li>
+          </ul>
+          <button class="room-select-btn" onclick="selectRoom('Family Room')">Select Room</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Gallery ── -->
+  <section id="gallery" class="band">
+    <div class="wrap">
+      <span class="tracking-label">THE PROPERTY</span>
+      <h2>Come and see</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item gallery-item--large">
+          <div class="gallery-label">The Lodge &amp; Grounds</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Comfortable Rooms</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Garden &amp; Poolside</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-label">Events &amp; Dining</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Location ── -->
+  <section id="location">
+    <div class="wrap cols">
+      <div>
+        <span class="tracking-label">GETTING HERE</span>
+        <h2>Close to town, quiet at night</h2>
+        <address class="lead">
+          24 Komani Street, Southbourne<br>
+          Komani (Queenstown), 5320<br>
+          Eastern Cape, South Africa
+        </address>
+      </div>
+      <div>
+        <div class="dist"><span>Queenstown City Centre</span><span>1.3 km</span></div>
+        <div class="dist"><span>Queenstown Frontier Museum</span><span>1.4 km (approx. 16-min walk)</span></div>
+        <div class="dist"><span>NG Church Queenstown</span><span>1.8 km</span></div>
+        <div class="dist"><span>Queenstown Golf Club</span><span>2.4 km</span></div>
+        <div class="dist"><span>Longhill Game Reserve</span><span>6.6 km</span></div>
+        <div class="dist"><span>Lawrence De Lange Nature Reserve</span><span>8.7 km</span></div>
+        <div class="dist"><span>Tiffany's Tavern</span><span>350 m</span></div>
+        <div class="dist"><span>KFC Nonesi Mall</span><span>350 m</span></div>
+        <div class="dist"><span>Wimpy</span><span>400 m</span></div>
+        <div class="dist"><span>Equatorial Coffee</span><span>750 m</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="band">
+    <div class="wrap">
+      <p class="tracking-label">GUEST INFORMATION</p>
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Check-in &amp; Check-out</button>
+          <div class="faq-answer">Check-in is from 14:00 to 00:00 (2:00 PM – 12:00 AM). Check-out is between 10:00 and 11:00.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Children &amp; Pets</button>
+          <div class="faq-answer">Children of all ages are welcome. Please note that cribs and extra beds are not available, and pets are not permitted on the premises.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Payments &amp; Cashless Policy</button>
+          <div class="faq-answer">Card and cashless payments are accepted (Visa, Mastercard, Maestro). Please note that cash payments are not accepted on-site.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">Cancellation &amp; Group Policy</button>
+          <div class="faq-answer">We are a quiet, family-friendly lodge. We do not accommodate bachelor/bachelorette parties or similar events. Cancellation and prepayment terms vary depending on room type and selected dates.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Book ── -->
+  <section id="book">
+    <div class="wrap">
+      <span class="tracking-label">RESERVATIONS</span>
+      <h2>Request your stay</h2>
+      <p class="lead">Send us your dates and group size and we'll reply with availability and rates. Sending opens WhatsApp with your details filled in.</p>
+      <form id="f">
+        <label>Full name<input name="name" required autocomplete="name"></label>
+        <label>Phone / WhatsApp<input name="phone" type="tel" autocomplete="tel"></label>
+        <label>Check-in<input name="in" type="date" required></label>
+        <label>Check-out<input name="out" type="date" required></label>
+        <label>Adults<input name="adults" type="number" min="1" value="2"></label>
+        <label>Children<input name="kids" type="number" min="0" value="0"></label>
+        <label class="full">Room type or special requirements<input name="req"></label>
+        <label class="full">Message<textarea name="msg" rows="3"></textarea></label>
+        <button class="btn" type="submit">Send on WhatsApp</button>
+      </form>
+      <p style="margin-top:16px;font-size:14px;color:var(--muted);">
+        Or contact us directly:
+        <a href="tel:+27725703772" style="color:var(--gold);">072 570 3772</a> &nbsp;·&nbsp;
+        <a href="tel:+27714147919" style="color:var(--gold);">071 414 7919</a> &nbsp;·&nbsp;
+        <a href="mailto:nonesilodge@gmail.com" style="color:var(--gold);">nonesilodge@gmail.com</a> &nbsp;·&nbsp;
+        <a href="https://wa.me/27725703772" target="_blank" rel="noopener" style="color:var(--gold);">WhatsApp</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand">Nonesi Lodge</p>
+        <address>
+          24 Komani Street, Southbourne<br>
+          Komani (Queenstown), 5320<br>
+          Eastern Cape, South Africa
+        </address>
+      </div>
+      <div>
+        <p style="font-weight:600;margin-bottom:8px;">Contact</p>
+        <p><a href="tel:+27725703772">072 570 3772</a> (Primary / WhatsApp)</p>
+        <p><a href="tel:+27714147919">071 414 7919</a></p>
+        <p><a href="mailto:nonesilodge@gmail.com">nonesilodge@gmail.com</a></p>
+      </div>
+      <div>
+        <p style="font-weight:600;margin-bottom:8px;">Quick Links</p>
+        <p><a href="#about">About</a></p>
+        <p><a href="#rooms">Rooms</a></p>
+        <p><a href="#book">Book a Stay</a></p>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2025 Nonesi Lodge. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ── Mobile CTA Bar ── -->
+<div class="mobile-cta-bar">
+  <a class="mobile-cta-btn" href="https://wa.me/27725703772" target="_blank" rel="noopener" aria-label="WhatsApp 072 570 3772">
+    <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.504L4 29l7.74-1.797A12.94 12.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3Zm0 2c5.523 0 10 4.477 10 10S21.523 25 16 25a10.95 10.95 0 0 1-5.59-1.531l-.389-.234-4.598 1.067 1.102-4.465-.254-.404A9.952 9.952 0 0 1 6 15c0-5.523 4.477-10 10-10Zm-3.09 5a.9.9 0 0 0-.654.297l-.008.008c-.234.254-.9.879-.9 2.145s.922 2.488 1.047 2.66c.129.172 1.793 2.883 4.422 3.93.617.254 1.098.406 1.473.52.619.188 1.183.162 1.629.098.496-.072 1.531-.625 1.746-1.23.219-.605.219-1.125.152-1.234-.063-.105-.234-.168-.496-.297-.266-.129-1.531-.758-1.77-.844-.234-.086-.402-.129-.574.129-.168.254-.656.844-.805 1.016-.145.168-.293.188-.559.063-.266-.129-1.121-.414-2.133-1.316-.789-.703-1.32-1.57-1.477-1.836-.152-.266-.016-.41.117-.543.121-.121.266-.313.398-.469.133-.156.176-.266.266-.441.09-.176.043-.332-.023-.461-.063-.129-.574-1.395-.793-1.906C13.586 10.148 13.3 10 13.09 10h-.18Z"/></svg>
+    WhatsApp
+  </a>
+  <a class="mobile-cta-btn" href="tel:0725703772" aria-label="Call 072 570 3772">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.68 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    Call
+    <span style="font-size:11px;opacity:0.85;display:block;line-height:1;">071 414 7919</span>
+  </a>
+</div>
+
+<script>
+/* ── Glassmorphism navbar on scroll ── */
+const nav = document.querySelector('nav');
+if (nav) {
+  nav.style.transition = 'background 0.3s ease, box-shadow 0.3s ease';
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      nav.style.background = 'rgba(251, 249, 245, 0.92)';
+      nav.style.backdropFilter = 'blur(12px)';
+      nav.style.webkitBackdropFilter = 'blur(12px)';
+      nav.style.boxShadow = '0 1px 0 rgba(44,66,53,0.1)';
+      nav.style.color = '#2C4235';
+    } else {
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'none';
+      nav.style.webkitBackdropFilter = 'none';
+      nav.style.boxShadow = 'none';
+      nav.style.color = '';
+    }
+  });
+}
+
+/* ── WhatsApp booking form ── */
+document.getElementById('f').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var d = new FormData(e.target);
+  var g = function(k) { return d.get(k) || ''; };
+  var t = 'Hi Nonesi Lodge, I\u2019d like to request a stay.\nName: ' + g('name') +
+    '\nPhone: ' + g('phone') +
+    '\nCheck-in: ' + g('in') +
+    '\nCheck-out: ' + g('out') +
+    '\nAdults: ' + g('adults') + ', Children: ' + g('kids') +
+    '\nRoom/requirements: ' + g('req') +
+    '\n' + g('msg');
+  window.open('https://wa.me/27725703772?text=' + encodeURIComponent(t), '_blank', 'noopener');
+});
+
+/* ── Select room → pre-fill + smooth scroll ── */
+function selectRoom(roomName) {
+  var textarea = document.querySelector('textarea[name="msg"]');
+  var reqInput = document.querySelector('[name="req"]');
+  if (textarea) {
+    textarea.value = 'Hi, I\u2019d like to enquire about the ' + roomName + '. Please let me know availability and rates.';
+  }
+  if (reqInput) {
+    reqInput.value = roomName;
+  }
+  var bookingSection = document.querySelector('#book');
+  if (bookingSection) {
+    bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+/* ── FAQ accordion ── */
+document.querySelectorAll('.faq-question').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = btn.closest('.faq-item');
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i) {
+      i.classList.remove('open');
+      i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>
