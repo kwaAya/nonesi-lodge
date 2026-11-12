@@ -6,7 +6,8 @@
 <title>Nonesi Lodge | B&B & Self-Catering Accommodation in Komani, Queenstown</title>
 <meta name="description" content="Comfortable B&B and self-catering accommodation in Southbourne, Komani (Queenstown), Eastern Cape. Family rooms, garden views, free Wi-Fi and convenient access to local attractions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#FBF9F5;--surface:#EFECE6;--ink:#2B2D2F;--muted:#5a5e5b;--green:#2C4235;--gold:#C86D51;--on-green:#FBF9F5;--line:#ddd9d1;color-scheme:light;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -14,29 +15,37 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 :root[data-theme="dark"]{--bg:#17201a;--surface:#1f2b23;--ink:#e8ede6;--muted:#a3b1a8;--green:#0f1a12;--gold:#e08a6a;--on-green:#e8ede6;--line:#2c3c32;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 "Nunito Sans",system-ui,sans-serif}
-h1,h2,h3{font-family:"Young Serif",Georgia,serif;font-weight:400;line-height:1.12;margin:0 0 .5em}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.7 'Plus Jakarta Sans',system-ui,sans-serif}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;line-height:1.1;margin:0 0 .5em}
+h2{font-size:clamp(2rem,5vw,3rem)}
+h3{font-size:clamp(1.1rem,2.5vw,1.4rem)}
+.label{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:10px}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
-nav{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;padding:18px 0;font-weight:600;font-size:15px}
-nav b{font-family:'Geraldine',cursive;font-weight:400;font-size:26px;margin-right:auto;letter-spacing:0.02em}
+nav{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:center;padding:18px 0;font-weight:600;font-size:14px;letter-spacing:0.01em;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+nav b{font-family:'Geraldine',cursive;font-weight:400;font-size:28px;margin-right:auto;letter-spacing:0.01em;line-height:1}
 nav a{text-decoration:none;opacity:.8}
 nav a:hover{opacity:1}
-.hero{background:var(--green);color:var(--on-green);overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:end;padding:40px 0 0}
-.hero-txt{padding-bottom:64px}
-.hero h1{font-size:clamp(3.2rem,9vw,6rem);margin:0 0 .25em;color:var(--gold)}
-.hero h1 small{display:block;font-size:.42em;color:var(--on-green);margin-top:.35em}
+.hero{position:relative;background:var(--green);color:var(--on-green);overflow:hidden;min-height:92vh;display:flex;flex-direction:column;}
+.hero-bg{position:absolute;inset:0;background-image:url('images/hero.jpg');background-size:cover;background-position:center 40%;background-repeat:no-repeat;opacity:0;transition:opacity 0.6s ease;z-index:0;}
+.hero-bg.loaded{opacity:1}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(20,33,24,0.45) 0%, rgba(20,33,24,0.78) 100%);z-index:1;}
+.hero .wrap{position:relative;z-index:2;display:flex;flex-direction:column;flex:1}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:24px;align-items:center;padding:60px 0 80px;flex:1;place-content:center}
+.hero-txt{max-width:700px;padding-bottom:0}
+.hero .art{display:none}
+.hero h1{font-size:clamp(3.6rem,9vw,6.5rem);margin:0 0 .25em;color:var(--gold);letter-spacing:-0.01em}
+.hero h1 small{display:block;font-size:.38em;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:500;color:var(--on-green);margin-top:.4em;letter-spacing:0.04em;text-transform:uppercase;opacity:0.85}
 .hero p{max-width:44ch;opacity:.92}
 .art{width:100%;height:auto;display:block}
 .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.btn{display:inline-block;padding:14px 24px;border-radius:999px;font-weight:700;text-decoration:none;background:var(--gold);color:#17120a;border:2px solid var(--gold)}
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;background:var(--gold);color:#fff;border:2px solid var(--gold);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 .btn.ghost{background:transparent;color:inherit;border-color:currentColor}
 section{padding:72px 0}
 .lead{max-width:60ch;color:var(--muted)}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:48px}
-.big{font-family:"Young Serif",Georgia,serif;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.3;max-width:24ch}
+.big{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.25;max-width:24ch;font-weight:400}
 ul.ticks{list-style:none;padding:0;margin:0}
 ul.ticks li{padding:10px 0 10px 32px;border-bottom:1px solid var(--line);position:relative}
 ul.ticks li::before{content:"";position:absolute;left:4px;top:15px;width:14px;height:14px;background:var(--gold);border-radius:0 100% 0 100%;transform:rotate(-8deg)}
@@ -44,13 +53,13 @@ ul.ticks li::before{content:"";position:absolute;left:4px;top:15px;width:14px;he
 .dist{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
 .dist span:last-child{color:var(--muted);text-align:right}
 .gal{display:flex;flex-wrap:wrap;gap:26px 22px;justify-content:center;margin-top:34px}
-.pol{background:var(--surface);color:var(--ink);padding:10px 10px 12px;width:min(300px,100%);box-shadow:0 8px 22px rgba(0,0,0,.18);transform:rotate(var(--r,0deg));font:600 15px "Young Serif",Georgia,serif}
+.pol{background:var(--surface);color:var(--ink);padding:10px 10px 12px;width:min(300px,100%);box-shadow:0 8px 22px rgba(0,0,0,.18);transform:rotate(var(--r,0deg));font:400 italic 15px 'Cormorant Garamond',Georgia,serif}
 .pol:nth-child(2){margin-top:22px}
-.pol .ph{aspect-ratio:4/3;display:grid;place-items:center;text-align:center;padding:14px;font:600 13px "Nunito Sans",sans-serif;color:#fff;background:linear-gradient(160deg,#2C4235,#C86D51);margin-bottom:12px}
+.pol .ph{aspect-ratio:4/3;position:relative;overflow:hidden;display:grid;place-items:center;text-align:center;padding:14px;font:600 13px 'Plus Jakarta Sans',sans-serif;color:#fff;background:linear-gradient(160deg,#2C4235,#C86D51);margin-bottom:12px}
 form{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px}
-label{display:grid;gap:6px;font-weight:600;font-size:15px}
+label{display:grid;gap:6px;font-weight:600;font-size:13px;letter-spacing:0.02em;text-transform:uppercase;color:var(--muted);font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 .full{grid-column:1/-1}
-input,textarea{font:inherit;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+input,textarea{font:400 15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
 button.btn{cursor:pointer;font:inherit;font-weight:700;justify-self:start}
 address{font-style:normal}
 footer{background:var(--green);color:var(--on-green);padding:36px 0;font-size:15px}
@@ -60,10 +69,10 @@ footer a{color:var(--gold)}
 /* Room cards */
 .room-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
 .room-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
-.room-card h3{font-size:1.15rem;margin:0;color:var(--green)}
-.room-specs{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
+.room-card h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;margin:0;color:var(--green);font-weight:600;letter-spacing:0.01em}
+.room-specs{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;font-weight:600;color:var(--muted);font-family:'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:0.03em;text-transform:uppercase}
 .room-specs span{background:var(--surface);border-radius:999px;padding:4px 11px;white-space:nowrap}
-.room-amenities{list-style:none;padding:0;margin:0;font-size:14.5px;display:flex;flex-direction:column;gap:6px}
+.room-amenities{list-style:none;padding:0;margin:0;font-size:14px;display:flex;flex-direction:column;gap:6px;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 .room-amenities li::before{content:"✓ ";color:var(--gold);font-weight:700}
 .room-select-btn{margin-top:auto;display:inline-block;padding:11px 20px;border-radius:999px;background:var(--gold);color:#fff;font-weight:700;font-size:14px;border:none;cursor:pointer;text-align:center;text-decoration:none;align-self:flex-start}
 .room-select-btn:hover{opacity:.88}
@@ -73,6 +82,19 @@ footer a{color:var(--gold)}
 .mobile-cta:hover{background:#b55e44}
 @media(min-width:761px){.mobile-cta{display:none}}
 </style>
+<!--
+  IMAGE SLOTS — drop files into /images/ folder:
+  images/hero.jpg         — Hero background (full-bleed, landscape, min 1600px wide)
+  images/room-twin.jpg    — Double or Twin Room
+  images/room-deluxe.jpg  — Deluxe Double Room with Shower
+  images/room-family-shower.jpg — Family Room with Shower
+  images/room-family.jpg  — Family Room
+  images/gallery-lodge.jpg    — The Lodge & Grounds (gallery, large)
+  images/gallery-rooms.jpg    — Comfortable Rooms (gallery)
+  images/gallery-pool.jpg     — Garden & Poolside (gallery)
+  images/gallery-events.jpg   — Events & Dining (gallery)
+  images/og-image.jpg         — Social share image (1200x630)
+-->
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -81,6 +103,8 @@ footer a{color:var(--gold)}
 </defs></svg>
 
 <header class="hero">
+<div class="hero-bg" id="hero-bg"></div>
+<div class="hero-overlay"></div>
 <div class="wrap">
 <nav aria-label="Main"><b>Nonesi Lodge</b><a href="#about">About</a><a href="#rooms">Rooms</a><a href="#gallery">Gallery</a><a href="#location">Location</a><a href="#book">Book</a></nav>
 <div class="hero-grid">
@@ -192,9 +216,9 @@ footer a{color:var(--gold)}
 <section id="gallery" class="band"><div class="wrap">
 <h2>Come and see</h2>
 <div class="gal">
-<figure class="pol" style="--r:-3deg;margin:0"><div class="ph">Lodge photo goes here</div>Welcome to Nonesi Lodge</figure>
-<figure class="pol" style="--r:2deg;margin:0"><div class="ph">Room photo goes here</div>Comfortable, practical rooms</figure>
-<figure class="pol" style="--r:-1.5deg;margin:0"><div class="ph">Garden photo goes here</div>Relax in the lodge garden</figure>
+<figure class="pol" style="--r:-3deg;margin:0"><div class="ph"><img src="images/gallery-lodge.jpg" alt="The Lodge &amp; Grounds" onerror="this.style.display='none'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></div>Welcome to Nonesi Lodge</figure>
+<figure class="pol" style="--r:2deg;margin:0"><div class="ph"><img src="images/gallery-rooms.jpg" alt="Comfortable Rooms" onerror="this.style.display='none'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></div>Comfortable, practical rooms</figure>
+<figure class="pol" style="--r:-1.5deg;margin:0"><div class="ph"><img src="images/gallery-pool.jpg" alt="Garden &amp; Poolside" onerror="this.style.display='none'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></div>Relax in the lodge garden</figure>
 </div>
 </div></section>
 
@@ -253,6 +277,15 @@ function selectRoom(name) {
     req.closest('form').scrollIntoView({behavior:'smooth', block:'start'});
     req.focus();
   }
+}
+</script>
+<script>
+// Show hero background image if it loads
+var heroBg = document.getElementById('hero-bg');
+if (heroBg) {
+  var testImg = new Image();
+  testImg.onload = function(){ heroBg.classList.add('loaded'); };
+  testImg.src = 'images/hero.jpg';
 }
 </script>
 </body>
