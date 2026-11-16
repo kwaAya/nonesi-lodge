@@ -161,9 +161,27 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
 .stat-num{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;color:var(--green);line-height:1;margin-bottom:4px}
 .stat-label{font-size:9.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
 
+/* ══════════════════════════════
+   ABOUT — icon ticks
+══════════════════════════════ */
 .ticks{list-style:none}
-.ticks li{display:flex;align-items:flex-start;gap:13px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.55;color:var(--ink)}
-.ticks li::before{content:'';flex-shrink:0;width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:8px}
+.ticks li{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:12px 0;border-bottom:1px solid var(--line);
+  font-size:14.5px;line-height:1.55;color:var(--ink);
+  opacity:0;transform:translateX(-12px);
+  transition:opacity 0.45s ease, transform 0.45s ease;
+}
+.ticks li.tick-visible{opacity:1;transform:translateX(0)}
+.tick-icon{
+  flex-shrink:0;width:34px;height:34px;border-radius:10px;
+  background:rgba(44,66,53,0.07);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);margin-top:-1px;
+  transition:background 0.25s ease,transform 0.25s ease;
+}
+.ticks li:hover .tick-icon{background:rgba(200,109,81,0.1);transform:scale(1.08)}
+.tick-text{flex:1}
 
 @media(max-width:760px){
   .about-inner{grid-template-columns:1fr}
@@ -506,30 +524,112 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
 @media(max-width:520px){.book-form{grid-template-columns:1fr}}
 
 /* ══════════════════════════════
-   FOOTER — image bg, NO overlay tint
+   FOOTER — redesigned
 ══════════════════════════════ */
-.footer{position:relative;background:#0f1c14;color:var(--cream);padding:clamp(48px,7vw,80px) 0 0;overflow:hidden}
+.footer{
+  position:relative;
+  background:#111c15;
+  color:var(--cream);
+  padding:clamp(52px,8vw,88px) 0 0;
+  overflow:hidden;
+}
+/* blurred photo — no colour overlay */
 .footer-bg{
   position:absolute;inset:0;z-index:0;
   background-image:url('images/about-main.png');
   background-size:cover;background-position:center 55%;
-  opacity:0.12;filter:blur(2px);transform:scale(1.06);
+  opacity:0.1;filter:blur(3px);transform:scale(1.06);
+}
+/* decorative top divider */
+.footer::before{
+  content:'';
+  position:absolute;top:0;left:clamp(18px,5vw,64px);right:clamp(18px,5vw,64px);
+  height:1px;
+  background:linear-gradient(to right,transparent,rgba(200,109,81,0.5) 30%,rgba(200,109,81,0.5) 70%,transparent);
+  z-index:1;
 }
 .footer-wrap{position:relative;z-index:1}
-.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:48px;padding-bottom:48px}
-.footer-brand{font-family:'Geraldine',cursive;font-size:34px;font-weight:400;letter-spacing:0.01em;line-height:1;margin-bottom:8px;color:var(--cream)}
-.footer-tagline{font-size:10.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(251,249,245,0.35);margin-bottom:22px}
-.footer-contact{display:flex;flex-direction:column;gap:7px;font-size:14px;color:rgba(251,249,245,0.65);line-height:1.6}
-.footer-contact a{color:var(--gold)}
-.footer-contact a:hover{text-decoration:underline}
-.footer-col-title{font-size:10.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(251,249,245,0.32);margin-bottom:18px}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr;
+  gap:clamp(32px,5vw,64px);
+  padding-bottom:clamp(40px,6vw,64px);
+  border-bottom:1px solid rgba(251,249,245,0.08);
+}
+
+/* col 1 — brand */
+.footer-brand{
+  font-family:'Geraldine',cursive;
+  font-size:clamp(28px,3.5vw,42px);
+  font-weight:400;letter-spacing:0.01em;line-height:1;
+  margin-bottom:6px;color:var(--cream);
+  display:block;
+}
+.footer-tagline{
+  font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(251,249,245,0.32);margin-bottom:28px;
+}
+.footer-contact{display:flex;flex-direction:column;gap:9px}
+.footer-contact-row{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:rgba(251,249,245,0.62);line-height:1.5}
+.footer-contact-icon{
+  width:28px;height:28px;border-radius:8px;flex-shrink:0;
+  background:rgba(251,249,245,0.06);border:1px solid rgba(251,249,245,0.09);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);margin-top:1px;
+}
+.footer-contact-row a{color:rgba(251,249,245,0.62);transition:color 0.2s ease}
+.footer-contact-row a:hover{color:var(--gold)}
+
+/* social row */
+.footer-socials{display:flex;gap:10px;margin-top:22px}
+.footer-social-btn{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(251,249,245,0.07);border:1px solid rgba(251,249,245,0.1);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(251,249,245,0.55);
+  transition:background 0.22s ease,color 0.22s ease,transform 0.22s ease;
+}
+.footer-social-btn:hover{background:rgba(200,109,81,0.2);color:var(--gold);transform:translateY(-2px)}
+
+/* col 2 — nav */
+.footer-col-title{
+  font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;
+  color:rgba(251,249,245,0.3);margin-bottom:18px;display:block;
+}
 .footer-links{list-style:none;display:flex;flex-direction:column;gap:9px}
-.footer-links a{font-size:14px;color:rgba(251,249,245,0.65);transition:color 0.2s ease}
-.footer-links a:hover{color:var(--cream)}
-.footer-hours{display:flex;flex-direction:column;gap:10px;font-size:14px;color:rgba(251,249,245,0.65)}
-.footer-hours strong{display:block;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(251,249,245,0.32);margin-bottom:1px}
-.footer-bottom{border-top:1px solid rgba(251,249,245,0.09);padding:18px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;font-size:11.5px;color:rgba(251,249,245,0.28)}
-@media(max-width:720px){.footer-grid{grid-template-columns:1fr;gap:32px}.footer-bottom{flex-direction:column;align-items:flex-start}}
+.footer-links a{
+  font-size:13.5px;color:rgba(251,249,245,0.6);
+  transition:color 0.2s ease,padding-left 0.2s ease;
+  display:block;
+}
+.footer-links a:hover{color:var(--cream);padding-left:4px}
+
+/* col 3 — info */
+.footer-info-list{display:flex;flex-direction:column;gap:11px}
+.footer-info-row{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(251,249,245,0.58);line-height:1.5}
+.footer-info-icon{
+  width:26px;height:26px;border-radius:7px;flex-shrink:0;
+  background:rgba(251,249,245,0.06);border:1px solid rgba(251,249,245,0.08);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(200,109,81,0.7);margin-top:1px;
+}
+.footer-info-row strong{color:rgba(251,249,245,0.42);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:1px}
+
+/* bottom bar */
+.footer-bottom{
+  padding:18px 0;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:6px;
+  font-size:11.5px;color:rgba(251,249,245,0.25);
+}
+.footer-bottom a{color:rgba(251,249,245,0.25);transition:color 0.2s ease}
+.footer-bottom a:hover{color:rgba(251,249,245,0.5)}
+
+@media(max-width:760px){
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+}
 
 /* ══════════════════════════════
    MOBILE CONTACT — inline, NOT sticky
@@ -636,17 +736,47 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
           <div class="stat-item reveal"><div class="stat-num">1.3<span style="font-size:1rem">km</span></div><div class="stat-label">To town centre</div></div>
           <div class="stat-item reveal"><div class="stat-num">24<span style="font-size:1rem">hr</span></div><div class="stat-label">Secure access</div></div>
         </div>
-        <ul class="ticks">
-          <li><strong>Check-in</strong> from 14:00 &nbsp;&middot;&nbsp; <strong>Check-out</strong> by 11:00</li>
-          <li>Free private parking &amp; Wi-Fi throughout</li>
-          <li>Outdoor swimming pool &amp; well-groomed garden</li>
-          <li>Hearty breakfast available on request &mdash; ask when booking</li>
-          <li>Daily housekeeping, laundry &amp; ironing</li>
-          <li>Event &amp; function venue setup available</li>
-          <li>Backup power &amp; water supply on-site</li>
-          <li>Security alarm, heating, non-smoking rooms</li>
-          <li>Visa, Mastercard, Maestro &amp; cashless payments</li>
-          <li>Quiet, family-friendly &mdash; no parties or groups</li>
+        <ul class="ticks" id="about-ticks">
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+            <span class="tick-text"><strong>Check-in</strong> from 14:00 &nbsp;&middot;&nbsp; <strong>Check-out</strong> by 11:00</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
+            <span class="tick-text">Free private parking &amp; Wi-Fi throughout</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span>
+            <span class="tick-text">Outdoor swimming pool &amp; well-groomed garden</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span>
+            <span class="tick-text">Hearty breakfast available on request &mdash; ask when booking</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
+            <span class="tick-text">Daily housekeeping, laundry &amp; ironing</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="tick-text">Event &amp; function venue setup available</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+            <span class="tick-text">Backup power &amp; water supply on-site</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+            <span class="tick-text">Security alarm, heating, non-smoking rooms</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+            <span class="tick-text">Visa, Mastercard, Maestro &amp; cashless payments</span>
+          </li>
+          <li>
+            <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>
+            <span class="tick-text">Quiet, family-friendly &mdash; no parties or groups</span>
+          </li>
         </ul>
       </div>
     </div>
@@ -787,13 +917,13 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
       </figure>
       <!-- 4 -->
       <figure class="gm-item reveal" data-idx="3">
-        <img src="images/gallery-entrance.png" alt="Lodge entrance and palm" loading="lazy" style="object-position:center 20%">
-        <figcaption>Arrival</figcaption>
+        <img src="images/gallery-events-actual.png" alt="Formal dining setup" loading="lazy" style="object-position:center 25%">
+        <figcaption>Events &amp; Dining</figcaption>
       </figure>
       <!-- 5 -->
       <figure class="gm-item reveal" data-idx="4">
-        <img src="images/gallery-events-actual.png" alt="Formal dining setup" loading="lazy" style="object-position:center 25%">
-        <figcaption>Events &amp; Dining</figcaption>
+        <img src="images/gallery-selfcatering.png" alt="Self-catering kitchenette" loading="lazy" style="object-position:center 30%">
+        <figcaption>Self-Catering</figcaption>
       </figure>
       <!-- 6: wide bottom-right -->
       <figure class="gm-item reveal" data-idx="5">
@@ -988,18 +1118,47 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
   <div class="footer-bg" aria-hidden="true"></div>
   <div class="footer-wrap wrap">
     <div class="footer-grid">
+
+      <!-- Brand + contact -->
       <div>
-        <div class="footer-brand">Nonesi Lodge</div>
+        <span class="footer-brand">Nonesi Lodge</span>
         <p class="footer-tagline">Southbourne &middot; Komani, Eastern Cape</p>
         <div class="footer-contact">
-          <span>24 Komani Street, Southbourne<br>Komani (Queenstown), 5320</span>
-          <a href="tel:+27725703772">072 570 3772</a>
-          <a href="tel:+27714147919">071 414 7919</a>
-          <a href="mailto:nonesilodge@gmail.com">nonesilodge@gmail.com</a>
+          <div class="footer-contact-row">
+            <span class="footer-contact-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span>24 Komani Street, Southbourne<br>Komani (Queenstown), 5320</span>
+          </div>
+          <div class="footer-contact-row">
+            <span class="footer-contact-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.5 2 2 0 0 1 3.62 1.4h3a2 2 0 0 1 2 1.72c.187.743.407 1.473.66 2.19a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l.95-.95a2 2 0 0 1 2.11-.45c.717.253 1.447.473 2.19.66A2 2 0 0 1 22 16.4z"/></svg>
+            </span>
+            <span><a href="tel:+27725703772">072 570 3772</a>&nbsp;&nbsp;<a href="tel:+27714147919">071 414 7919</a></span>
+          </div>
+          <div class="footer-contact-row">
+            <span class="footer-contact-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <span><a href="mailto:nonesilodge@gmail.com">nonesilodge@gmail.com</a></span>
+          </div>
+        </div>
+        <div class="footer-socials">
+          <a class="footer-social-btn" href="https://wa.me/27725703772" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg width="14" height="14" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.504L4 29l7.74-1.797A12.94 12.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3Zm0 2c5.523 0 10 4.477 10 10S21.523 25 16 25a10.95 10.95 0 0 1-5.59-1.531l-.389-.234-4.598 1.067 1.102-4.465-.254-.404A9.952 9.952 0 0 1 6 15c0-5.523 4.477-10 10-10Zm-3.09 5a.9.9 0 0 0-.654.297l-.008.008c-.234.254-.9.879-.9 2.145s.922 2.488 1.047 2.66c.129.172 1.793 2.883 4.422 3.93.617.254 1.098.406 1.473.52.619.188 1.183.162 1.629.098.496-.072 1.531-.625 1.746-1.23.219-.605.219-1.125.152-1.234-.063-.105-.234-.168-.496-.297-.266-.129-1.531-.758-1.77-.844-.234-.086-.402-.129-.574.129-.168.254-.656.844-.805 1.016-.145.168-.293.188-.559.063-.266-.129-1.121-.414-2.133-1.316-.789-.703-1.32-1.57-1.477-1.836-.152-.266-.016-.41.117-.543.121-.121.266-.313.398-.469.133-.156.176-.266.266-.441.09-.176.043-.332-.023-.461-.063-.129-.574-1.395-.793-1.906C13.586 10.148 13.3 10 13.09 10h-.18Z"/></svg>
+          </a>
+          <a class="footer-social-btn" href="https://www.facebook.com/111206120286988" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a class="footer-social-btn" href="mailto:nonesilodge@gmail.com" aria-label="Email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </a>
         </div>
       </div>
+
+      <!-- Navigation -->
       <div>
-        <p class="footer-col-title">Navigate</p>
+        <span class="footer-col-title">Navigate</span>
         <ul class="footer-links">
           <li><a href="#about">About</a></li>
           <li><a href="#rooms">Rooms</a></li>
@@ -1010,19 +1169,50 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
           <li><a href="#book">Book a Stay</a></li>
         </ul>
       </div>
+
+      <!-- Guest info -->
       <div>
-        <p class="footer-col-title">Guest Information</p>
-        <div class="footer-hours">
-          <div><strong>Check-in:</strong> From 14:00</div>
-          <div><strong>Check-out:</strong> By 11:00</div>
-          <div><strong>Payments:</strong> Visa, Mastercard, Maestro &amp; cashless</div>
-          <div><strong>Policy:</strong> Quiet, family-friendly lodge</div>
+        <span class="footer-col-title">Guest Information</span>
+        <div class="footer-info-list">
+          <div class="footer-info-row">
+            <span class="footer-info-icon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </span>
+            <div><strong>Check-in / out</strong>14:00 arrival &nbsp;&middot;&nbsp; 11:00 departure</div>
+          </div>
+          <div class="footer-info-row">
+            <span class="footer-info-icon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </span>
+            <div><strong>Payments</strong>Visa, Mastercard, Maestro &amp; cashless</div>
+          </div>
+          <div class="footer-info-row">
+            <span class="footer-info-icon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </span>
+            <div><strong>Policy</strong>Quiet, family-friendly &mdash; no parties</div>
+          </div>
+          <div class="footer-info-row">
+            <span class="footer-info-icon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+            </span>
+            <div><strong>Wi-Fi</strong>Free throughout the property</div>
+          </div>
+          <div class="footer-info-row">
+            <span class="footer-info-icon">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </span>
+            <div><strong>Parking</strong>Free private on-site parking</div>
+          </div>
         </div>
       </div>
+
     </div>
+
     <div class="footer-bottom">
-      <span>&copy; <span id="copy-year">2026</span> Nonesi Lodge &middot; 24 Komani Street, Southbourne, Komani</span>
-      <span>Designed by Aya Core Studios</span>
+      <span>&copy; <span id="copy-year">2026</span> Nonesi Lodge</span>
+      <span>24 Komani Street, Southbourne, Komani</span>
+      <span>Designed by <a href="#">Aya Core Studios</a></span>
     </div>
   </div>
 </footer>
@@ -1071,10 +1261,9 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
     {src:'images/about-main.png',           cap:'Lodge & Pool'},
     {src:'images/gallery-entrance.png',      cap:'Arrival'},
     {src:'images/room-deluxe-actual.png',    cap:'Guest Rooms'},
-    {src:'images/gallery-entrance.png',      cap:'Arrival'},
     {src:'images/gallery-events-actual.png', cap:'Events & Dining'},
-    {src:'images/gallery-pool.png',          cap:'Garden & Pool'},
     {src:'images/gallery-selfcatering.png',  cap:'Self-Catering Kitchen'},
+    {src:'images/gallery-pool.png',          cap:'Garden & Pool'},
     {src:'images/room-terrace.png',          cap:'Private Terrace'},
     {src:'images/room-family-beds.png',      cap:'Family Room'},
     {src:'images/gallery-rooms.png',         cap:'Rooms'},
@@ -1181,6 +1370,25 @@ function selectRoom(name){
 
 /* ── Dynamic copyright year ── */
 (function(){ var el=document.getElementById('copy-year'); if(el) el.textContent=new Date().getFullYear(); })();
+
+/* ── About ticks stagger animation ── */
+(function(){
+  var list = document.getElementById('about-ticks');
+  if(!list) return;
+  var items = list.querySelectorAll('li');
+  if(!('IntersectionObserver' in window)){
+    items.forEach(function(li){ li.classList.add('tick-visible'); }); return;
+  }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var idx = Array.prototype.indexOf.call(items, e.target);
+      setTimeout(function(){ e.target.classList.add('tick-visible'); }, idx * 70);
+      obs.unobserve(e.target);
+    });
+  },{threshold:0.15});
+  items.forEach(function(li){ obs.observe(li); });
+})();
 </script>
 </body>
 </html>
