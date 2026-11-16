@@ -28,7 +28,7 @@ nav b{font-family:'Geraldine',cursive;font-weight:400;font-size:28px;margin-righ
 nav a{text-decoration:none;opacity:.8}
 nav a:hover{opacity:1}
 .hero{position:relative;background:var(--green);color:var(--on-green);overflow:hidden;min-height:92vh;display:flex;flex-direction:column;}
-.hero-bg{position:absolute;inset:0;background-image:url('images/hero.jpg');background-size:cover;background-position:center 40%;background-repeat:no-repeat;opacity:0;transition:opacity 0.6s ease;z-index:0;}
+.hero-bg{position:absolute;inset:0;background-image:url('images/hero.png');background-size:cover;background-position:center 40%;background-repeat:no-repeat;opacity:0;transition:opacity 0.6s ease;z-index:0;}
 .hero-bg.loaded{opacity:1}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom, rgba(20,33,24,0.45) 0%, rgba(20,33,24,0.78) 100%);z-index:1;}
 .hero .wrap{position:relative;z-index:2;display:flex;flex-direction:column;flex:1}
@@ -68,7 +68,11 @@ footer a{color:var(--gold)}
 @media (max-width:760px){.hero-grid,.cols,form{grid-template-columns:1fr}.hero-txt{padding-bottom:8px}}
 /* Room cards */
 .room-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
-.room-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
+.room-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;gap:0}
+.room-card-img{aspect-ratio:4/3;overflow:hidden;background:var(--surface)}
+.room-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.4s ease}
+.room-card:hover .room-card-img img{transform:scale(1.04)}
+.room-card-body{padding:22px 24px;display:flex;flex-direction:column;gap:14px;flex:1}
 .room-card h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.35rem;margin:0;color:var(--green);font-weight:600;letter-spacing:0.01em}
 .room-specs{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;font-weight:600;color:var(--muted);font-family:'Plus Jakarta Sans',system-ui,sans-serif;letter-spacing:0.03em;text-transform:uppercase}
 .room-specs span{background:var(--surface);border-radius:999px;padding:4px 11px;white-space:nowrap}
@@ -81,6 +85,14 @@ footer a{color:var(--gold)}
 .mobile-cta{position:fixed;bottom:0;left:0;right:0;z-index:999;background:#C86D51;color:#fff;text-align:center;padding:14px 20px;font-weight:700;font-size:16px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 .mobile-cta:hover{background:#b55e44}
 @media(min-width:761px){.mobile-cta{display:none}}
+/* Bento gallery */
+.bento{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:260px 260px;gap:12px;margin-top:32px}
+.bento-item{margin:0;padding:0;overflow:hidden;border-radius:12px;position:relative;background:var(--surface)}
+.bento-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s ease}
+.bento-item:hover img{transform:scale(1.04)}
+.bento-item figcaption{position:absolute;bottom:0;left:0;right:0;padding:14px 16px 12px;background:linear-gradient(to top,rgba(20,33,24,0.72) 0%,transparent 100%);color:#fff;font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.03em;text-transform:uppercase}
+.bento-large{grid-column:1/3;grid-row:1/3}
+@media(max-width:760px){.bento{grid-template-columns:1fr 1fr;grid-template-rows:200px 200px 200px}.bento-large{grid-column:1/3;grid-row:1/2}}
 </style>
 <!--
   IMAGE SLOTS — drop files into /images/ folder:
@@ -151,6 +163,8 @@ footer a{color:var(--gold)}
 <div class="room-grid">
 
   <div class="room-card">
+    <div class="room-card-img"><img src="images/room-twin.png" alt="Double or Twin Room" loading="lazy"></div>
+    <div class="room-card-body">
     <h3>Double or Twin Room</h3>
     <div class="room-specs">
       <span>Sleeps 2</span><span>16 m&sup2;</span><span>1 Bedroom</span><span>1 Private Bathroom</span>
@@ -163,9 +177,12 @@ footer a{color:var(--gold)}
       <li>Free Wi-Fi</li>
     </ul>
     <button class="room-select-btn" onclick="selectRoom('Double or Twin Room')">Select Room</button>
+    </div>
   </div>
 
   <div class="room-card">
+    <div class="room-card-img"><img src="images/room-deluxe.png" alt="Deluxe Double Room with Shower" loading="lazy"></div>
+    <div class="room-card-body">
     <h3>Deluxe Double Room with Shower</h3>
     <div class="room-specs">
       <span>Sleeps 2</span><span>16 m&sup2;</span><span>1 Bedroom</span><span>Private Bathroom with Shower</span>
@@ -178,9 +195,12 @@ footer a{color:var(--gold)}
       <li>Free Wi-Fi</li>
     </ul>
     <button class="room-select-btn" onclick="selectRoom('Deluxe Double Room with Shower')">Select Room</button>
+    </div>
   </div>
 
   <div class="room-card">
+    <div class="room-card-img"><img src="images/room-family.png" alt="Family Room with Shower" loading="lazy"></div>
+    <div class="room-card-body">
     <h3>Family Room with Shower</h3>
     <div class="room-specs">
       <span>Sleeps 3</span><span>20 m&sup2;</span><span>1 Bedroom</span><span>Private Bathroom with Shower</span>
@@ -193,9 +213,12 @@ footer a{color:var(--gold)}
       <li>Free Wi-Fi</li>
     </ul>
     <button class="room-select-btn" onclick="selectRoom('Family Room with Shower')">Select Room</button>
+    </div>
   </div>
 
   <div class="room-card">
+    <div class="room-card-img"><img src="images/room-exterior.png" alt="Family Room" loading="lazy"></div>
+    <div class="room-card-body">
     <h3>Family Room</h3>
     <div class="room-specs">
       <span>Sleeps 4 (up to 4 children)</span><span>22 m&sup2;</span><span>1 Bedroom</span><span>1 Private Bathroom</span>
@@ -208,17 +231,32 @@ footer a{color:var(--gold)}
       <li>Free Wi-Fi</li>
     </ul>
     <button class="room-select-btn" onclick="selectRoom('Family Room')">Select Room</button>
+    </div>
   </div>
 
 </div>
 </div></section>
 
 <section id="gallery" class="band"><div class="wrap">
+<span class="label">The Property</span>
 <h2>Come and see</h2>
-<div class="gal">
-<figure class="pol" style="--r:-3deg;margin:0"><div class="ph"><img src="images/gallery-lodge.jpg" alt="The Lodge &amp; Grounds" onerror="this.style.display='none'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></div>Welcome to Nonesi Lodge</figure>
-<figure class="pol" style="--r:2deg;margin:0"><div class="ph"><img src="images/gallery-rooms.jpg" alt="Comfortable Rooms" onerror="this.style.display='none'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></div>Comfortable, practical rooms</figure>
-<figure class="pol" style="--r:-1.5deg;margin:0"><div class="ph"><img src="images/gallery-pool.jpg" alt="Garden &amp; Poolside" onerror="this.style.display='none'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"></div>Relax in the lodge garden</figure>
+<div class="bento">
+  <figure class="bento-item bento-large">
+    <img src="images/gallery-lodge.png" alt="The Lodge & Grounds" loading="lazy">
+    <figcaption>The Lodge &amp; Grounds</figcaption>
+  </figure>
+  <figure class="bento-item">
+    <img src="images/gallery-rooms.png" alt="Comfortable Rooms" loading="lazy">
+    <figcaption>Comfortable Rooms</figcaption>
+  </figure>
+  <figure class="bento-item">
+    <img src="images/gallery-pool.png" alt="Garden & Poolside" loading="lazy">
+    <figcaption>Garden &amp; Poolside</figcaption>
+  </figure>
+  <figure class="bento-item">
+    <img src="images/gallery-events.png" alt="Outdoor Dining & Amenities" loading="lazy">
+    <figcaption>Outdoor Dining &amp; Amenities</figcaption>
+  </figure>
 </div>
 </div></section>
 
@@ -285,7 +323,7 @@ var heroBg = document.getElementById('hero-bg');
 if (heroBg) {
   var testImg = new Image();
   testImg.onload = function(){ heroBg.classList.add('loaded'); };
-  testImg.src = 'images/hero.jpg';
+  testImg.src = 'images/hero.png';
 }
 </script>
 </body>
