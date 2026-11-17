@@ -137,6 +137,11 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
 .hero-greeting{font-family:'Geraldine',cursive;font-size:clamp(4rem,11vw,7.8rem);font-weight:400;line-height:0.93;color:var(--cream);margin-bottom:22px;letter-spacing:-0.01em}
 .hero-desc{font-size:16px;line-height:1.74;color:rgba(251,249,245,0.78);max-width:44ch;margin-bottom:36px}
 .hero-btns{display:flex;flex-wrap:wrap;gap:12px}
+@media(max-width:760px){
+  .hero-btns{gap:9px}
+  .hero-btns .btn{padding:11px 20px;font-size:11.5px}
+  .hero-btns .btn-ghost{display:none}
+}
 
 /* ══════════════════════════════
    ABOUT
@@ -665,26 +670,6 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
 }
 
 /* ══════════════════════════════
-   MOBILE CONTACT — inline, NOT sticky
-   placed inside the booking section on mobile
-══════════════════════════════ */
-.mobile-contact-btns{
-  display:none;
-  gap:10px;margin-top:28px;
-}
-.mobile-contact-btns a{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
-  padding:15px 10px;border-radius:12px;
-  font-size:12.5px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;
-  transition:transform 0.2s ease,box-shadow 0.2s ease;
-}
-.mob-wa{background:var(--gold);color:#fff;border:none}
-.mob-wa:hover{background:var(--gold-h);transform:translateY(-2px);box-shadow:0 8px 20px rgba(200,109,81,0.3)}
-.mob-call{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
-.mob-call:hover{border-color:var(--green);transform:translateY(-2px)}
-@media(max-width:760px){.mobile-contact-btns{display:flex}}
-
-/* ══════════════════════════════
    SCROLL REVEAL
 ══════════════════════════════ */
 .reveal,.reveal-left,.reveal-right{transition:opacity 0.65s ease,transform 0.65s ease}
@@ -730,17 +715,6 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
       <div class="hero-btns">
         <a class="btn btn-primary" href="#book">Request your stay</a>
         <a class="btn btn-ghost" href="tel:+27725703772">Call 072&nbsp;570&nbsp;3772</a>
-      </div>
-      <!-- mobile contact buttons — inline below hero CTA on mobile -->
-      <div class="mobile-contact-btns">
-        <a class="mob-wa" href="https://wa.me/27725703772?text=Hi%20Nonesi%20Lodge%2C%20I%27d%20like%20to%20enquire." target="_blank" rel="noopener">
-          <svg width="17" height="17" viewBox="0 0 32 32" fill="currentColor"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.668 4.61 1.832 6.504L4 29l7.74-1.797A12.94 12.94 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3Zm0 2c5.523 0 10 4.477 10 10S21.523 25 16 25a10.95 10.95 0 0 1-5.59-1.531l-.389-.234-4.598 1.067 1.102-4.465-.254-.404A9.952 9.952 0 0 1 6 15c0-5.523 4.477-10 10-10Zm-3.09 5a.9.9 0 0 0-.654.297l-.008.008c-.234.254-.9.879-.9 2.145s.922 2.488 1.047 2.66c.129.172 1.793 2.883 4.422 3.93.617.254 1.098.406 1.473.52.619.188 1.183.162 1.629.098.496-.072 1.531-.625 1.746-1.23.219-.605.219-1.125.152-1.234-.063-.105-.234-.168-.496-.297-.266-.129-1.531-.758-1.77-.844-.234-.086-.402-.129-.574.129-.168.254-.656.844-.805 1.016-.145.168-.293.188-.559.063-.266-.129-1.121-.414-2.133-1.316-.789-.703-1.32-1.57-1.477-1.836-.152-.266-.016-.41.117-.543.121-.121.266-.313.398-.469.133-.156.176-.266.266-.441.09-.176.043-.332-.023-.461-.063-.129-.574-1.395-.793-1.906C13.586 10.148 13.3 10 13.09 10h-.18Z"/></svg>
-          WhatsApp
-        </a>
-        <a class="mob-call" href="tel:+27725703772">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.65 3.5 2 2 0 0 1 3.62 1.4h3a2 2 0 0 1 2 1.72c.187.743.407 1.473.66 2.19a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.09 6.09l.95-.95a2 2 0 0 1 2.11-.45c.717.253 1.447.473 2.19.66A2 2 0 0 1 22 16.4z"/></svg>
-          Call
-        </a>
       </div>
     </div>
   </div>
