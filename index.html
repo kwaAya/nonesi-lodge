@@ -48,7 +48,7 @@
 
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 16px)}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 16px);overflow-x:hidden}
 body{background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:16px;line-height:1.72;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -769,7 +769,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
       </div>
       <div class="about-right reveal-right">
         <p class="about-pull">Nonesi Lodge is a B&amp;B and self-catering lodge in Southbourne. Friendly staff, a relaxed feel, and Queenstown's shops and restaurants close by.</p>
-        <p class="about-body">Whether you're here for work, a family occasion, or just passing through the Eastern Cape — we welcome you like a neighbour, not a reservation number.</p>
+        <p class="about-body">Whether you're here for work, a family occasion, or just passing through Komani — we welcome you like a neighbour, not a reservation number.</p>
         <div class="about-stats stagger">
           <div class="stat-item reveal"><div class="stat-num">4</div><div class="stat-label">Room types</div></div>
           <div class="stat-item reveal"><div class="stat-num">1.3<span style="font-size:1rem">km</span></div><div class="stat-label">To town centre</div></div>
@@ -778,7 +778,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
         <ul class="ticks" id="about-ticks">
           <li>
             <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-            <span class="tick-text"><strong>Check-in</strong> from 14:00 &nbsp;&middot;&nbsp; <strong>Check-out</strong> by 11:00</span>
+            <span class="tick-text"><strong>Check-in</strong> from 14:00 &nbsp;&middot;&nbsp; <strong>Check-out</strong> by 10:00</span>
           </li>
           <li>
             <span class="tick-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></span>
@@ -951,7 +951,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
       </figure>
       <!-- 3 -->
       <figure class="gm-item reveal" data-idx="2">
-        <img src="images/room-deluxe-actual.png" alt="Guest room interior" loading="lazy" style="object-position:center 15%">
+        <img src="images/gallery-rooms.png" alt="Comfortable guest rooms" loading="lazy" style="object-position:center 30%">
         <figcaption>Guest Rooms</figcaption>
       </figure>
       <!-- 4 -->
@@ -1089,7 +1089,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">What are the check-in and check-out times?<span class="faq-icon" aria-hidden="true"></span></button>
-        <p class="faq-a">Standard check-in is from 14:00 to 20:00, and check-out is by 11:00. Arriving later in the evening? Just let us know in advance on WhatsApp and we'll arrange a smooth arrival.</p>
+        <p class="faq-a">Standard check-in is from 14:00 to 20:00, and check-out is by 10:00. Arriving later in the evening? Just let us know in advance on WhatsApp and we'll arrange a smooth arrival.</p>
       </div>
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">Is breakfast included, and what are the options?<span class="faq-icon" aria-hidden="true"></span></button>
@@ -1217,7 +1217,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
             <span class="footer-info-icon">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </span>
-            <div><strong>Check-in / out</strong>14:00 arrival &nbsp;&middot;&nbsp; 11:00 departure</div>
+            <div><strong>Check-in / out</strong>14:00 arrival &nbsp;&middot;&nbsp; 10:00 departure</div>
           </div>
           <div class="footer-info-row">
             <span class="footer-info-icon">
@@ -1299,7 +1299,7 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
   var images = [
     {src:'images/about-main.png',           cap:'Lodge & Pool'},
     {src:'images/gallery-entrance.png',      cap:'Arrival'},
-    {src:'images/room-deluxe-actual.png',    cap:'Guest Rooms'},
+    {src:'images/gallery-rooms.png',         cap:'Guest Rooms'},
     {src:'images/gallery-events-actual.png', cap:'Events & Dining'},
     {src:'images/gallery-selfcatering.png',  cap:'Self-Catering Kitchen'},
     {src:'images/gallery-pool.png',          cap:'Garden & Pool'},
