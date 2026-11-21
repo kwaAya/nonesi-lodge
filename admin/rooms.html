@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rooms — Admin</title>
+</head>
+<body>
+<div class="main">
+  <div class="topbar">
+    <button class="menu-toggle" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <h1 class="topbar-title">Rooms</h1>
+    <div class="topbar-actions">
+      <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add room</button>
+    </div>
+  </div>
+  <div class="page-body">
+    <p style="color:var(--muted);margin-bottom:24px;font-size:13px">Manage room types, pricing, and amenities. Changes reflect live on the website when the page is refreshed.</p>
+    <table>
+      <thead><tr><th>Photo</th><th>Room name</th><th>Specs</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="rooms-body"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Add room</span>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <form id="room-form">
+      <input type="hidden" id="room-id">
+      <div class="form-grid">
+        <div class="form-group form-full">
+          <label>Room name</label>
+          <input type="text" id="f-name" required placeholder="e.g. Deluxe Double Room">
+        </div>
+        <div class="form-group">
+          <label>Starting price (e.g. R700)</label>
+          <input type="text" id="f-price" required placeholder="R700">
+        </div>
+        <div class="form-group">
+          <label>Booking form key (pre-fill text)</label>
+          <input type="text" id="f-key" required placeholder="Deluxe Double Room with Shower">
+        </div>
+        <div class="form-group form-full">
+          <label>Specs — comma separated</label>
+          <input type="text" id="f-specs" placeholder="Sleeps 2, 16 m², Double bed, Private bathroom">
+        </div>
+        <div class="form-group form-full">
+          <label>Amenities — one per line (format: icon|description)</label>
+          <textarea id="f-amenities" rows="6" placeholder="wifi|Free Wi-Fi&#10;tv|Flat-screen TV with Netflix&#10;desk|Work desk&#10;kitchen|Fridge, microwave &amp; kettle"></textarea>
+          <small style="color:var(--muted);font-size:11px;margin-top:4px">Icons: wifi, tv, desk, kitchen, safe, view, terrace, heating, pool, parking, coffee, clean, security, events, family, power, payment</small>
+        </div>
+        <div class="form-group form-full">
+          <label>Photo URL (Supabase Storage or external)</label>
+          <input type="url" id="f-image" placeholder="https://…/images/room-deluxe.png">
+        </div>
+        <div class="form-group">
+          <label>Sort order (lower = first)</label>
+          <input type="number" id="f-order" value="0" min="0">
+        </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:22px">
+          <input type="checkbox" id="f-active" checked style="width:18px;height:18px;accent-color:var(--green)">
+          <label for="f-active" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:0">Active (visible on site)</label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="save-btn">Save room</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/admin-shell.js"></script>
+<script>
+let sb;
+(async () => {
+  sb = await authGuard();
+  if (!sb) return;
+  renderShell('rooms');
+  loadRooms();
+})();
+
+async function loadRooms() {
+  const { data, error } = await sb.from('rooms').select('*').order('sort_order');
+  const tbody = document.getElementById('rooms-body');
+  if (error || !data || data.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">${error ? 'Error loading rooms.' : 'No rooms yet. Add your first room above.'}</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(r => {
+    const specs = Array.isArray(r.specs) ? r.specs.join(' · ') : r.specs;
+    return `<tr>
+      <td>${r.image_url ? `<img src="${r.image_url}" style="width:56px;height:42px;object-fit:cover;border-radius:6px">` : '<span style="color:var(--muted)">No photo</span>'}</td>
+      <td><strong>${r.name}</strong></td>
+      <td style="color:var(--muted);font-size:12px">${specs || '—'}</td>
+      <td><strong style="color:var(--green)">${r.price}</strong><span style="color:var(--muted);font-size:11px"> / night</span></td>
+      <td><span class="badge ${r.active ? 'badge-confirmed' : 'badge-cancelled'}">${r.active ? 'Active' : 'Hidden'}</span></td>
+      <td style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-outline btn-sm" onclick='editRoom(${JSON.stringify(r)})'>Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteRoom('${r.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openModal(room) {
+  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-title').textContent = room ? 'Edit room' : 'Add room';
+  document.getElementById('room-id').value    = room?.id || '';
+  document.getElementById('f-name').value     = room?.name || '';
+  document.getElementById('f-price').value    = room?.price || '';
+  document.getElementById('f-key').value      = room?.select_key || '';
+  document.getElementById('f-specs').value    = Array.isArray(room?.specs) ? room.specs.join(', ') : '';
+  document.getElementById('f-image').value    = room?.image_url || '';
+  document.getElementById('f-order').value    = room?.sort_order ?? 0;
+  document.getElementById('f-active').checked = room?.active ?? true;
+  // Amenities: convert [{icon,text}] → "icon|text\nicon|text"
+  const ami = Array.isArray(room?.amenities) ? room.amenities.map(a => `${a.icon}|${a.text}`).join('\n') : '';
+  document.getElementById('f-amenities').value = ami;
+}
+
+function editRoom(room) { openModal(room); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+document.getElementById('room-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  const id = document.getElementById('room-id').value;
+  const specsRaw = document.getElementById('f-specs').value;
+  const amiRaw   = document.getElementById('f-amenities').value;
+
+  const payload = {
+    name:       document.getElementById('f-name').value.trim(),
+    price:      document.getElementById('f-price').value.trim(),
+    select_key: document.getElementById('f-key').value.trim(),
+    specs:      specsRaw.split(',').map(s => s.trim()).filter(Boolean),
+    amenities:  amiRaw.split('\n').map(l => { const [icon, ...rest] = l.split('|'); return { icon: icon?.trim(), text: rest.join('|').trim() }; }).filter(a => a.icon && a.text),
+    image_url:  document.getElementById('f-image').value.trim() || null,
+    sort_order: parseInt(document.getElementById('f-order').value) || 0,
+    active:     document.getElementById('f-active').checked,
+  };
+
+  const { error } = id
+    ? await sb.from('rooms').update(payload).eq('id', id)
+    : await sb.from('rooms').insert(payload);
+
+  btn.disabled = false; btn.textContent = 'Save room';
+  if (error) { showToast('Error: ' + error.message, 'error'); return; }
+  showToast(id ? 'Room updated.' : 'Room added.', 'success');
+  closeModal();
+  loadRooms();
+});
+
+async function deleteRoom(id) {
+  if (!confirm('Delete this room? This cannot be undone.')) return;
+  const { error } = await sb.from('rooms').delete().eq('id', id);
+  if (error) { showToast('Error: ' + error.message, 'error'); return; }
+  showToast('Room deleted.', 'success');
+  loadRooms();
+}
+</script>
+</body>
+</html>
