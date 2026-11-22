@@ -1405,6 +1405,39 @@ h3{font-size:clamp(1.1rem,2vw,1.4rem)}
   window.addEventListener('scroll', tick, {passive:true}); tick();
 })();
 
+/* ── Page entrance fade ── */
+(function(){
+  document.documentElement.style.opacity = '0';
+  document.documentElement.style.transition = 'opacity 0.5s ease';
+  window.addEventListener('load', function(){
+    requestAnimationFrame(function(){
+      document.documentElement.style.opacity = '1';
+    });
+  });
+})();
+
+/* ── Hero greeting stagger ── */
+(function(){
+  var el = document.querySelector('.hero-greeting');
+  if (!el) return;
+  var text = el.textContent;
+  el.innerHTML = '';
+  var delay = 0;
+  for (var i = 0; i < text.length; i++) {
+    var span = document.createElement('span');
+    span.textContent = text[i] === '\n' ? '' : text[i];
+    if (text[i] === '\n') { el.appendChild(document.createElement('br')); continue; }
+    span.style.cssText = 'display:inline-block;opacity:0;transform:translateY(12px);transition:opacity 0.4s ease '+delay+'ms,transform 0.4s ease '+delay+'ms';
+    el.appendChild(span);
+    delay += text[i].trim() ? 28 : 8;
+  }
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      el.querySelectorAll('span').forEach(function(s){ s.style.opacity='1'; s.style.transform='translateY(0)'; });
+    }, 300);
+  });
+})();
+
 /* ── Hero image ── */
 (function(){
   var bg = document.getElementById('hero-bg');

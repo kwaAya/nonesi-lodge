@@ -9,6 +9,18 @@
 html{background:var(--bg)}
 body{visibility:hidden;background:var(--bg);margin:0;font-family:system-ui,sans-serif}
 body.ready{visibility:visible}
+
+/* Greeting card */
+.greeting-card{position:relative;overflow:hidden;background:var(--green);padding:32px clamp(24px,4vw,40px);margin-left:var(--sidebar)}
+.greeting-card-bg{position:absolute;inset:0;background:url('../images/hero.png') center/cover no-repeat;opacity:.08;filter:blur(2px);transform:scale(1.05)}
+.greeting-card-content{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.greeting-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+.greeting-heading{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;font-style:italic;color:#fff;line-height:1.1;margin-bottom:6px}
+.greeting-sub{font-size:13px;color:rgba(251,249,245,.6);max-width:38ch}
+.greeting-right{text-align:right;flex-shrink:0}
+.greeting-date{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,249,245,.4);margin-bottom:10px}
+.greeting-alert{display:inline-flex;align-items:center;gap:8px;background:rgba(200,109,81,.2);border:1px solid rgba(200,109,81,.35);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;color:var(--gold)}
+@media(max-width:768px){.greeting-card{margin-left:0}.greeting-right{text-align:left}}
 </style>
 </head>
 <body>
@@ -17,13 +29,29 @@ body.ready{visibility:visible}
     <button class="menu-toggle" aria-label="Menu">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <h1 class="topbar-title" id="page-greeting">Dashboard</h1>
+    <h1 class="topbar-title">Dashboard</h1>
     <div class="topbar-actions">
       <a class="btn btn-outline btn-sm" href="../index.html" target="_blank">View site ↗</a>
     </div>
   </div>
+
+  <!-- GREETING CARD -->
+  <div class="greeting-card" id="greeting-card">
+    <div class="greeting-card-bg" aria-hidden="true"></div>
+    <div class="greeting-card-content">
+      <div class="greeting-left">
+        <span class="greeting-eyebrow" id="greeting-eyebrow">Overview</span>
+        <h2 class="greeting-heading" id="greeting-heading">Good morning.</h2>
+        <p class="greeting-sub" id="greeting-sub">Here's what's happening at Nonesi Lodge today.</p>
+      </div>
+      <div class="greeting-right">
+        <div class="greeting-date" id="greeting-date"></div>
+        <div class="greeting-alert" id="greeting-alert"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="page-body">
-    <p id="dash-eyebrow" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Overview</p>
     <div class="stats-row" id="stats-row">
       <div class="stat-card"><div class="stat-card-num" id="stat-rooms">—</div><div class="stat-card-label">Active rooms</div></div>
       <div class="stat-card"><div class="stat-card-num" id="stat-gallery">—</div><div class="stat-card-label">Gallery photos</div></div>
@@ -63,15 +91,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const h = new Date().getHours();
   const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('page-greeting').textContent = greet;
+  const now   = new Date();
+  const dateStr = now.toLocaleDateString('en-ZA', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+  document.getElementById('greeting-heading').textContent = greet + '.';
+  document.getElementById('greeting-eyebrow').textContent = 'Nonesi Lodge · Admin Portal';
+  document.getElementById('greeting-date').textContent    = dateStr;
 
   const rooms      = DemoData.getRooms();
   const gallery    = DemoData.getGallery();
   const inquiries  = DemoData.getInquiries();
 
+  const newCount = inquiries.filter(i => i.status === 'new').length;
+  const alertEl  = document.getElementById('greeting-alert');
+  if (newCount > 0) {
+    alertEl.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> ${newCount} new ${newCount === 1 ? 'inquiry' : 'inquiries'}`;
+    document.getElementById('greeting-sub').textContent = `You have ${newCount} new ${newCount === 1 ? 'inquiry' : 'inquiries'} waiting for a response.`;
+  } else {
+    alertEl.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All caught up`;
+    alertEl.style.background = 'rgba(44,66,53,.25)';
+    alertEl.style.borderColor = 'rgba(44,66,53,.4)';
+    alertEl.style.color = 'rgba(251,249,245,.6)';
+  }
+
   document.getElementById('stat-rooms').textContent   = rooms.filter(r => r.active).length;
   document.getElementById('stat-gallery').textContent = gallery.length;
-  document.getElementById('stat-new').textContent     = inquiries.filter(i => i.status === 'new').length;
+  document.getElementById('stat-new').textContent     = newCount;
   document.getElementById('stat-total').textContent   = inquiries.length;
 
   const recent = inquiries
