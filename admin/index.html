@@ -11,12 +11,13 @@
     <button class="menu-toggle" aria-label="Menu">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <h1 class="topbar-title">Dashboard</h1>
+    <h1 class="topbar-title" id="page-greeting">Dashboard</h1>
     <div class="topbar-actions">
       <a class="btn btn-outline btn-sm" href="../index.html" target="_blank">View site ↗</a>
     </div>
   </div>
   <div class="page-body">
+    <p id="dash-eyebrow" style="font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Overview</p>
     <div class="stats-row" id="stats-row">
       <div class="stat-card"><div class="stat-card-num" id="stat-rooms">—</div><div class="stat-card-label">Active rooms</div></div>
       <div class="stat-card"><div class="stat-card-num" id="stat-gallery">—</div><div class="stat-card-label">Gallery photos</div></div>
@@ -28,10 +29,12 @@
       <span class="section-title">Recent inquiries</span>
       <a class="btn btn-outline btn-sm" href="inquiries.html">View all</a>
     </div>
+    <div style="overflow-x:auto;border-radius:16px">
     <table id="recent-table">
       <thead><tr><th>Guest</th><th>Dates</th><th>Room</th><th>Status</th><th>Received</th></tr></thead>
       <tbody id="recent-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">Loading…</td></tr></tbody>
     </table>
+    </div>
 
     <div class="section-header" style="margin-top:36px">
       <span class="section-title">Quick links</span>
@@ -50,6 +53,10 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   renderShell('dashboard');
+
+  const h = new Date().getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('page-greeting').textContent = greet;
 
   const rooms      = DemoData.getRooms();
   const gallery    = DemoData.getGallery();

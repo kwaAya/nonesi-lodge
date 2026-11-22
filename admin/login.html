@@ -5,44 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin Portal — Nonesi Lodge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --green:#2C4235;--gold:#C86D51;--gold-h:#B35A3E;
-  --bg:#FBF9F5;--surface:#F2EFE8;--ink:#2B2D2F;--muted:#6B6F6C;--line:rgba(44,66,53,.12);
+  --bg:#FBF9F5;--surface:#F2EFE8;--ink:#2B2D2F;--muted:#6B6F6C;
 }
-body{background:var(--green);min-height:100svh;display:grid;place-items:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding:24px}
-.card{background:var(--bg);border-radius:20px;padding:clamp(32px,6vw,52px);width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,.35)}
-.card-logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-style:italic;color:var(--gold);margin-bottom:4px;line-height:1.1}
-.card-sub{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
-.demo-notice{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:12px;padding:16px 18px;margin-bottom:28px}
-.demo-notice-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#92400E;display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.demo-notice-body{font-size:13px;color:#78350F}
-.btn-enter{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border:none;border-radius:12px;background:var(--green);color:#fff;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .2s,transform .2s;margin-top:4px}
-.btn-enter:hover{background:var(--gold);transform:translateY(-1px)}
-.footer{text-align:center;margin-top:28px;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.05em}
-.back{text-align:center;margin-top:16px;font-size:12px;color:var(--muted)}
-.back a{color:var(--gold);font-weight:600;text-decoration:none}
-.back a:hover{text-decoration:underline}
+html,body{height:100%;min-height:100svh}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--green)}
+
+/* noise texture overlay */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  background-size:300px 300px}
+body>*{position:relative;z-index:1}
+
+/* Wrapper */
+.login-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:100svh}
+@media(max-width:760px){.login-wrap{grid-template-columns:1fr}}
+
+/* LEFT: hero half */
+.login-hero{position:relative;overflow:hidden;display:flex;flex-direction:column}
+@media(max-width:760px){.login-hero{height:220px;display:block}}
+
+.login-hero-bg{
+  position:absolute;inset:0;
+  background:url('../images/hero.png') center 38%/cover no-repeat;
+}
+.login-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(158deg,rgba(12,22,16,0.22) 0%,rgba(12,22,16,0.60) 50%,rgba(12,22,16,0.92) 100%)
+}
+.login-hero-content{
+  position:relative;z-index:2;
+  margin-top:auto;
+  padding:clamp(40px,6vw,72px);
+}
+.login-brand{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-style:italic;
+  font-size:clamp(2.8rem,5vw,4.2rem);
+  color:#fff;
+  line-height:1.05;
+  letter-spacing:-0.015em;
+  margin-bottom:12px;
+}
+.login-tagline{
+  font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.login-hero-foot{
+  position:relative;z-index:2;
+  padding:20px clamp(40px,6vw,72px);
+  font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);
+}
+@media(max-width:760px){
+  .login-hero-content{padding:24px 28px;margin-top:0}
+  .login-brand{font-size:2rem}
+  .login-hero-foot{display:none}
+}
+
+/* RIGHT: cream panel */
+.login-panel{
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:clamp(32px,6vw,64px);
+}
+.login-panel-inner{width:100%;max-width:400px;display:flex;flex-direction:column;gap:0}
+
+.login-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;
+}
+.login-panel-title{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:clamp(2rem,4vw,2.8rem);
+  color:var(--green);
+  line-height:1.1;
+  margin-bottom:28px;
+}
+
+/* Demo pill badge */
+.demo-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(200,109,81,.1);
+  border:1.5px solid rgba(200,109,81,.3);
+  border-radius:999px;
+  padding:7px 16px;
+  font-size:11.5px;font-weight:700;
+  color:var(--gold-h);
+  letter-spacing:.04em;
+  margin-bottom:20px;
+  width:fit-content;
+}
+.demo-pill-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 0 3px rgba(200,109,81,.25);
+  flex-shrink:0;
+}
+
+.login-body{
+  font-size:13.5px;line-height:1.72;color:var(--muted);
+  margin-bottom:32px;
+}
+
+/* Enter button */
+.login-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:17px 24px;
+  border-radius:999px;
+  background:var(--gold);color:#fff;
+  font-family:inherit;font-size:12px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;
+  box-shadow:0 8px 28px rgba(200,109,81,.35);
+  transition:background .2s,transform .2s,box-shadow .2s;
+  margin-bottom:16px;
+}
+.login-btn:hover{background:var(--gold-h);transform:translateY(-2px);box-shadow:0 14px 36px rgba(200,109,81,.42)}
+
+/* Back link */
+.login-back{
+  display:block;text-align:center;
+  font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;letter-spacing:.04em;
+  transition:color .2s;
+}
+.login-back:hover{color:var(--green)}
 </style>
 </head>
 <body>
-<div>
-  <div class="card">
-    <div class="card-logo">Nonesi Lodge</div>
-    <div class="card-sub">Admin Portal</div>
+<div class="login-wrap">
 
-    <div class="demo-notice">
-      <div class="demo-notice-title">🔒 Demo Mode</div>
-      <div class="demo-notice-body">This is a live demo. No password required. Data is stored locally in your browser.</div>
+  <!-- LEFT: hero half -->
+  <div class="login-hero">
+    <div class="login-hero-bg"></div>
+    <div class="login-hero-overlay"></div>
+    <div class="login-hero-content">
+      <div class="login-brand">Nonesi Lodge</div>
+      <div class="login-tagline">Southbourne · Komani, EC</div>
     </div>
-
-    <a class="btn-enter" href="index.html">Enter Admin Portal →</a>
-
-    <div class="back"><a href="../index.html">← Back to website</a></div>
+    <div class="login-hero-foot">Powered by Aya Core Studios</div>
   </div>
-  <div class="footer">Powered by Aya Core Studios</div>
+
+  <!-- RIGHT: cream panel -->
+  <div class="login-panel">
+    <div class="login-panel-inner">
+      <div class="login-eyebrow">Admin Portal</div>
+      <div class="login-panel-title">Welcome back</div>
+
+      <div class="demo-pill">
+        <span class="demo-pill-dot"></span>
+        Demo Mode — no password required
+      </div>
+
+      <p class="login-body">
+        This is a live demo of the Nonesi Lodge admin portal.
+        All data is stored locally in your browser.
+      </p>
+
+      <a class="login-btn" href="index.html">Enter Admin Portal →</a>
+      <a class="login-back" href="../index.html">← Back to website</a>
+    </div>
+  </div>
+
 </div>
 </body>
 </html>
