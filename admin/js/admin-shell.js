@@ -37,7 +37,7 @@ body>*{position:relative;z-index:1}
 .sidebar-nav{flex:1;padding:20px 16px;display:flex;flex-direction:column;gap:2px}
 .sidebar-link{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s,background .2s,transform .2s;border-left:2.5px solid transparent}
 .sidebar-link:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);border-left-color:rgba(200,109,81,.5);transform:translateX(4px)}
-.sidebar-link.active{background:rgba(200,109,81,.12);color:#fff;border-left-color:var(--gold)}
+.sidebar-link.active{color:#fff;border-left-color:var(--gold)}
 .sidebar-link svg{flex-shrink:0;opacity:.65}
 .sidebar-link.active svg{opacity:1}
 .sidebar-link:hover svg{opacity:.85}
@@ -187,7 +187,10 @@ const NAV_ITEMS = [
   { id: 'settings',  label: 'Settings',  href: 'settings.html',  icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>` },
 ];
 
-function signOut() {
+function shellSignOut() {
+  // Plain redirect for demo mode.
+  // When supabase.js is activated, replace this with a call to its signOut()
+  // so the Supabase session is properly terminated before the redirect.
   window.location.href = 'login.html';
 }
 
@@ -232,7 +235,7 @@ function renderShell(activeId) {
     <nav class="sidebar-nav">${navHtml}</nav>
     <div class="sidebar-foot">
       <span class="sidebar-credit">Powered by Aya Core Studios</span>
-      <button class="sidebar-sign-out" onclick="signOut()">
+      <button class="sidebar-sign-out" onclick="shellSignOut()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sign out
       </button>
