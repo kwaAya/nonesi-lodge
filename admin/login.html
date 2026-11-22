@@ -3,74 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Admin Login — Nonesi Lodge</title>
+<title>Admin Portal — Nonesi Lodge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--green:#2C4235;--gold:#C86D51;--bg:#FBF9F5;--surface:#F2EFE8;--ink:#2B2D2F;--muted:#6B6F6C;--line:rgba(44,66,53,.12)}
+:root{
+  --green:#2C4235;--gold:#C86D51;--gold-h:#B35A3E;
+  --bg:#FBF9F5;--surface:#F2EFE8;--ink:#2B2D2F;--muted:#6B6F6C;--line:rgba(44,66,53,.12);
+}
 body{background:var(--green);min-height:100svh;display:grid;place-items:center;font-family:'Plus Jakarta Sans',system-ui,sans-serif;padding:24px}
-.card{background:var(--bg);border-radius:20px;padding:clamp(32px,6vw,52px);width:100%;max-width:400px;box-shadow:0 32px 80px rgba(0,0,0,.35)}
-.card-logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.9rem;font-style:italic;color:var(--green);margin-bottom:6px}
-.card-sub{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
-label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-input{padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;color:var(--ink);background:var(--bg);transition:border-color .2s,box-shadow .2s}
-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,109,81,.12)}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;background:var(--green);color:#fff;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:8px;transition:background .2s,transform .2s}
-.btn:hover{background:var(--gold);transform:translateY(-1px)}
-.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.error{font-size:13px;color:#B84040;margin-top:12px;display:none}
-.error.show{display:block}
-.back{text-align:center;margin-top:20px;font-size:12px;color:var(--muted)}
-.back a{color:var(--gold);font-weight:600}
+.card{background:var(--bg);border-radius:20px;padding:clamp(32px,6vw,52px);width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,.35)}
+.card-logo{font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-style:italic;color:var(--gold);margin-bottom:4px;line-height:1.1}
+.card-sub{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:28px}
+.demo-notice{background:#FFFBEB;border:1.5px solid #F59E0B;border-radius:12px;padding:16px 18px;margin-bottom:28px}
+.demo-notice-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#92400E;display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.demo-notice-body{font-size:13px;color:#78350F}
+.btn-enter{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border:none;border-radius:12px;background:var(--green);color:#fff;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .2s,transform .2s;margin-top:4px}
+.btn-enter:hover{background:var(--gold);transform:translateY(-1px)}
+.footer{text-align:center;margin-top:28px;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.05em}
+.back{text-align:center;margin-top:16px;font-size:12px;color:var(--muted)}
+.back a{color:var(--gold);font-weight:600;text-decoration:none}
+.back a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="card-logo">Nonesi Lodge</div>
-  <div class="card-sub">Admin Portal</div>
-  <form id="login-form">
-    <label>Email<input type="email" id="email" required autocomplete="email" placeholder="you@email.com"></label>
-    <label>Password<input type="password" id="password" required autocomplete="current-password" placeholder="••••••••"></label>
-    <button class="btn" type="submit" id="submit-btn">Sign in</button>
-    <p class="error" id="error-msg"></p>
-  </form>
-  <div class="back"><a href="../index.html">← Back to website</a></div>
+<div>
+  <div class="card">
+    <div class="card-logo">Nonesi Lodge</div>
+    <div class="card-sub">Admin Portal</div>
+
+    <div class="demo-notice">
+      <div class="demo-notice-title">🔒 Demo Mode</div>
+      <div class="demo-notice-body">This is a live demo. No password required. Data is stored locally in your browser.</div>
+    </div>
+
+    <a class="btn-enter" href="index.html">Enter Admin Portal →</a>
+
+    <div class="back"><a href="../index.html">← Back to website</a></div>
+  </div>
+  <div class="footer">Powered by Aya Core Studios</div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase.js"></script>
-<script>
-(async () => {
-  // If already logged in, go straight to dashboard
-  const sb = getClient();
-  if (sb) {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) { window.location.href = 'index.html'; return; }
-  }
-
-  document.getElementById('login-form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const btn = document.getElementById('submit-btn');
-    const err = document.getElementById('error-msg');
-    btn.disabled = true;
-    btn.textContent = 'Signing in…';
-    err.classList.remove('show');
-
-    const email    = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) {
-      err.textContent = error.message;
-      err.classList.add('show');
-      btn.disabled = false;
-      btn.textContent = 'Sign in';
-    } else {
-      window.location.href = 'index.html';
-    }
-  });
-})();
-</script>
 </body>
 </html>

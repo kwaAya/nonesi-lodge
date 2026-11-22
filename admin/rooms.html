@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rooms — Admin</title>
+<title>Rooms — Nonesi Lodge Admin</title>
 </head>
 <body>
 <div class="main">
@@ -13,15 +13,14 @@
     </button>
     <h1 class="topbar-title">Rooms</h1>
     <div class="topbar-actions">
-      <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add room</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add Room</button>
     </div>
   </div>
   <div class="page-body">
-    <p style="color:var(--muted);margin-bottom:24px;font-size:13px">Manage room types, pricing, and amenities. Changes reflect live on the website when the page is refreshed.</p>
-    <table>
-      <thead><tr><th>Photo</th><th>Room name</th><th>Specs</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
-      <tbody id="rooms-body"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
-    </table>
+    <p style="color:var(--muted);margin-bottom:28px;font-size:13px">Manage room types, pricing, and availability. Changes are saved locally in this demo.</p>
+    <div class="rooms-grid" id="rooms-grid">
+      <div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div>
+    </div>
   </div>
 </div>
 
@@ -29,42 +28,45 @@
 <div class="modal-backdrop" id="modal">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title" id="modal-title">Add room</span>
+      <span class="modal-title" id="modal-title">Add Room</span>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <form id="room-form">
-      <input type="hidden" id="room-id">
+      <input type="hidden" id="f-id">
       <div class="form-grid">
         <div class="form-group form-full">
           <label>Room name</label>
           <input type="text" id="f-name" required placeholder="e.g. Deluxe Double Room">
         </div>
         <div class="form-group">
-          <label>Starting price (e.g. R700)</label>
-          <input type="text" id="f-price" required placeholder="R700">
+          <label>Price (R / night)</label>
+          <input type="number" id="f-price" required placeholder="700" min="0">
         </div>
         <div class="form-group">
-          <label>Booking form key (pre-fill text)</label>
-          <input type="text" id="f-key" required placeholder="Deluxe Double Room with Shower">
-        </div>
-        <div class="form-group form-full">
-          <label>Specs — comma separated</label>
-          <input type="text" id="f-specs" placeholder="Sleeps 2, 16 m², Double bed, Private bathroom">
-        </div>
-        <div class="form-group form-full">
-          <label>Amenities — one per line (format: icon|description)</label>
-          <textarea id="f-amenities" rows="6" placeholder="wifi|Free Wi-Fi&#10;tv|Flat-screen TV with Netflix&#10;desk|Work desk&#10;kitchen|Fridge, microwave &amp; kettle"></textarea>
-          <small style="color:var(--muted);font-size:11px;margin-top:4px">Icons: wifi, tv, desk, kitchen, safe, view, terrace, heating, pool, parking, coffee, clean, security, events, family, power, payment</small>
-        </div>
-        <div class="form-group form-full">
-          <label>Photo URL (Supabase Storage or external)</label>
-          <input type="url" id="f-image" placeholder="https://…/images/room-deluxe.png">
+          <label>Sleeps</label>
+          <input type="number" id="f-sleeps" required placeholder="2" min="1">
         </div>
         <div class="form-group">
-          <label>Sort order (lower = first)</label>
-          <input type="number" id="f-order" value="0" min="0">
+          <label>Size (m²)</label>
+          <input type="number" id="f-size" placeholder="16" min="0">
         </div>
-        <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:22px">
+        <div class="form-group">
+          <label>Bed type</label>
+          <input type="text" id="f-bed" placeholder="Double bed">
+        </div>
+        <div class="form-group">
+          <label>Bathroom</label>
+          <input type="text" id="f-bathroom" placeholder="Private bathroom">
+        </div>
+        <div class="form-group form-full">
+          <label>Image path</label>
+          <input type="text" id="f-image" placeholder="../images/room-twin.png">
+        </div>
+        <div class="form-group form-full">
+          <label>Description</label>
+          <textarea id="f-desc" rows="3" placeholder="A short description of the room…"></textarea>
+        </div>
+        <div class="form-group form-full" style="display:flex;align-items:center;gap:10px">
           <input type="checkbox" id="f-active" checked style="width:18px;height:18px;accent-color:var(--green)">
           <label for="f-active" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:0">Active (visible on site)</label>
         </div>
@@ -77,98 +79,106 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase.js"></script>
+<script src="js/demo-data.js"></script>
 <script src="js/admin-shell.js"></script>
 <script>
-let sb;
-(async () => {
-  sb = await authGuard();
-  if (!sb) return;
+document.addEventListener('DOMContentLoaded', () => {
   renderShell('rooms');
-  loadRooms();
-})();
+  renderRooms();
+});
 
-async function loadRooms() {
-  const { data, error } = await sb.from('rooms').select('*').order('sort_order');
-  const tbody = document.getElementById('rooms-body');
-  if (error || !data || data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">${error ? 'Error loading rooms.' : 'No rooms yet. Add your first room above.'}</td></tr>`;
+function renderRooms() {
+  const rooms = DemoData.getRooms();
+  const grid  = document.getElementById('rooms-grid');
+  if (rooms.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><h3>No rooms yet</h3><p>Add your first room using the button above.</p></div>`;
     return;
   }
-  tbody.innerHTML = data.map(r => {
-    const specs = Array.isArray(r.specs) ? r.specs.join(' · ') : r.specs;
-    return `<tr>
-      <td>${r.image_url ? `<img src="${r.image_url}" style="width:56px;height:42px;object-fit:cover;border-radius:6px">` : '<span style="color:var(--muted)">No photo</span>'}</td>
-      <td><strong>${r.name}</strong></td>
-      <td style="color:var(--muted);font-size:12px">${specs || '—'}</td>
-      <td><strong style="color:var(--green)">${r.price}</strong><span style="color:var(--muted);font-size:11px"> / night</span></td>
-      <td><span class="badge ${r.active ? 'badge-confirmed' : 'badge-cancelled'}">${r.active ? 'Active' : 'Hidden'}</span></td>
-      <td style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-outline btn-sm" onclick='editRoom(${JSON.stringify(r)})'>Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteRoom('${r.id}')">Delete</button>
-      </td>
-    </tr>`;
-  }).join('');
+  grid.innerHTML = rooms.map(r => `
+    <div class="room-card">
+      ${r.image
+        ? `<img class="room-card-img" src="${r.image}" alt="${r.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        : ''}
+      <div class="room-card-img-placeholder" style="${r.image ? 'display:none' : ''}">No image</div>
+      <div class="room-card-body">
+        <div class="room-card-name">${r.name}</div>
+        <div class="room-card-price">From R${r.price}/night</div>
+        <div class="room-card-specs">Sleeps ${r.sleeps} · ${r.size_m2}m² · ${r.bed_type}</div>
+        <div class="room-card-specs" style="margin-top:2px">${r.bathroom}</div>
+        <div style="margin-top:8px"><span class="badge ${r.active ? 'badge-active' : 'badge-hidden'}">${r.active ? 'Active' : 'Hidden'}</span></div>
+      </div>
+      <div class="room-card-actions">
+        <button class="btn btn-outline btn-sm" style="flex:1" onclick="editRoom(${r.id})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteRoom(${r.id})">Delete</button>
+      </div>
+    </div>`).join('');
 }
 
 function openModal(room) {
   document.getElementById('modal').classList.add('open');
-  document.getElementById('modal-title').textContent = room ? 'Edit room' : 'Add room';
-  document.getElementById('room-id').value    = room?.id || '';
+  document.getElementById('modal-title').textContent = room ? 'Edit Room' : 'Add Room';
+  document.getElementById('f-id').value       = room ? room.id : '';
   document.getElementById('f-name').value     = room?.name || '';
   document.getElementById('f-price').value    = room?.price || '';
-  document.getElementById('f-key').value      = room?.select_key || '';
-  document.getElementById('f-specs').value    = Array.isArray(room?.specs) ? room.specs.join(', ') : '';
-  document.getElementById('f-image').value    = room?.image_url || '';
-  document.getElementById('f-order').value    = room?.sort_order ?? 0;
-  document.getElementById('f-active').checked = room?.active ?? true;
-  // Amenities: convert [{icon,text}] → "icon|text\nicon|text"
-  const ami = Array.isArray(room?.amenities) ? room.amenities.map(a => `${a.icon}|${a.text}`).join('\n') : '';
-  document.getElementById('f-amenities').value = ami;
+  document.getElementById('f-sleeps').value   = room?.sleeps || '';
+  document.getElementById('f-size').value     = room?.size_m2 || '';
+  document.getElementById('f-bed').value      = room?.bed_type || '';
+  document.getElementById('f-bathroom').value = room?.bathroom || '';
+  document.getElementById('f-image').value    = room?.image || '';
+  document.getElementById('f-desc').value     = room?.description || '';
+  document.getElementById('f-active').checked = room?.active !== false;
 }
 
-function editRoom(room) { openModal(room); }
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function editRoom(id) {
+  const room = DemoData.getRooms().find(r => r.id === id);
+  if (room) openModal(room);
+}
 
-document.getElementById('room-form').addEventListener('submit', async e => {
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('room-form').reset();
+}
+
+function deleteRoom(id) {
+  if (!confirm('Delete this room? This cannot be undone.')) return;
+  const rooms = DemoData.getRooms().filter(r => r.id !== id);
+  DemoData.saveRooms(rooms);
+  renderRooms();
+  showToast('Room deleted.', 'success');
+}
+
+document.getElementById('room-form').addEventListener('submit', e => {
   e.preventDefault();
-  const btn = document.getElementById('save-btn');
-  btn.disabled = true; btn.textContent = 'Saving…';
-
-  const id = document.getElementById('room-id').value;
-  const specsRaw = document.getElementById('f-specs').value;
-  const amiRaw   = document.getElementById('f-amenities').value;
+  const rooms = DemoData.getRooms();
+  const idVal = document.getElementById('f-id').value;
+  const id    = idVal ? parseInt(idVal) : null;
 
   const payload = {
-    name:       document.getElementById('f-name').value.trim(),
-    price:      document.getElementById('f-price').value.trim(),
-    select_key: document.getElementById('f-key').value.trim(),
-    specs:      specsRaw.split(',').map(s => s.trim()).filter(Boolean),
-    amenities:  amiRaw.split('\n').map(l => { const [icon, ...rest] = l.split('|'); return { icon: icon?.trim(), text: rest.join('|').trim() }; }).filter(a => a.icon && a.text),
-    image_url:  document.getElementById('f-image').value.trim() || null,
-    sort_order: parseInt(document.getElementById('f-order').value) || 0,
-    active:     document.getElementById('f-active').checked,
+    id:          id || (rooms.length > 0 ? Math.max(...rooms.map(r => r.id)) + 1 : 1),
+    name:        document.getElementById('f-name').value.trim(),
+    price:       parseInt(document.getElementById('f-price').value) || 0,
+    price_unit:  'night',
+    sleeps:      parseInt(document.getElementById('f-sleeps').value) || 1,
+    size_m2:     parseInt(document.getElementById('f-size').value) || 0,
+    bed_type:    document.getElementById('f-bed').value.trim(),
+    bathroom:    document.getElementById('f-bathroom').value.trim(),
+    image:       document.getElementById('f-image').value.trim(),
+    description: document.getElementById('f-desc').value.trim(),
+    active:      document.getElementById('f-active').checked,
   };
 
-  const { error } = id
-    ? await sb.from('rooms').update(payload).eq('id', id)
-    : await sb.from('rooms').insert(payload);
+  if (id) {
+    const idx = rooms.findIndex(r => r.id === id);
+    if (idx !== -1) rooms[idx] = payload;
+  } else {
+    rooms.push(payload);
+  }
 
-  btn.disabled = false; btn.textContent = 'Save room';
-  if (error) { showToast('Error: ' + error.message, 'error'); return; }
-  showToast(id ? 'Room updated.' : 'Room added.', 'success');
+  DemoData.saveRooms(rooms);
   closeModal();
-  loadRooms();
+  renderRooms();
+  showToast(id ? 'Room updated.' : 'Room added.', 'success');
 });
-
-async function deleteRoom(id) {
-  if (!confirm('Delete this room? This cannot be undone.')) return;
-  const { error } = await sb.from('rooms').delete().eq('id', id);
-  if (error) { showToast('Error: ' + error.message, 'error'); return; }
-  showToast('Room deleted.', 'success');
-  loadRooms();
-}
 </script>
 </body>
 </html>

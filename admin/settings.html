@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Settings — Admin</title>
+<title>Settings — Nonesi Lodge Admin</title>
 </head>
 <body>
 <div class="main">
@@ -13,127 +13,111 @@
     </button>
     <h1 class="topbar-title">Settings</h1>
     <div class="topbar-actions">
-      <button class="btn btn-primary btn-sm" id="save-all-btn">Save all</button>
+      <button class="btn btn-primary btn-sm" id="save-btn">Save Settings</button>
     </div>
   </div>
   <div class="page-body">
-    <p style="color:var(--muted);margin-bottom:28px;font-size:13px">Site-wide settings for the lodge. These values are stored in Supabase and can be used to generate an updated <code>config.js</code>.</p>
+    <p style="color:var(--muted);margin-bottom:28px;font-size:13px">Lodge-wide settings. Changes are saved locally in this demo.</p>
 
-    <div style="max-width:600px">
-      <div id="settings-form"></div>
+    <div style="max-width:640px;display:flex;flex-direction:column;gap:32px">
 
-      <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--line)">
-        <div class="section-header" style="margin-bottom:12px">
-          <span class="section-title">Account</span>
-        </div>
-        <div class="form-grid" style="max-width:420px">
-          <div class="form-group form-full">
-            <label>New password</label>
-            <input type="password" id="new-password" placeholder="Leave blank to keep current">
+      <!-- Check-in / Check-out -->
+      <div>
+        <div class="section-title" style="margin-bottom:16px">Check-in &amp; Check-out</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Check-in time</label>
+            <input type="time" id="s-checkin">
           </div>
-        </div>
-        <button class="btn btn-outline btn-sm" style="margin-top:4px" id="change-pwd-btn">Change password</button>
-        <div style="margin-top:24px">
-          <button class="btn btn-danger btn-sm" onclick="signOut()">Sign out</button>
+          <div class="form-group">
+            <label>Check-out time</label>
+            <input type="time" id="s-checkout">
+          </div>
         </div>
       </div>
 
-      <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--line)">
-        <div class="section-header" style="margin-bottom:12px">
-          <span class="section-title">Export config.js</span>
+      <!-- Contact info -->
+      <div>
+        <div class="section-title" style="margin-bottom:16px">Contact Info</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Phone 1</label>
+            <input type="text" id="s-phone1" placeholder="072 570 3772">
+          </div>
+          <div class="form-group">
+            <label>Phone 2</label>
+            <input type="text" id="s-phone2" placeholder="071 414 7919">
+          </div>
+          <div class="form-group form-full">
+            <label>Email</label>
+            <input type="email" id="s-email" placeholder="nonesilodge@gmail.com">
+          </div>
+          <div class="form-group form-full">
+            <label>Address</label>
+            <textarea id="s-address" rows="2" placeholder="24 Komani Street, Southbourne, Komani (Queenstown), 5320"></textarea>
+          </div>
         </div>
-        <p style="color:var(--muted);font-size:13px;margin-bottom:14px">Generate an updated <code>config.js</code> snippet from the current settings — paste it into your template to sync the live site with any changes you've made here.</p>
-        <button class="btn btn-outline btn-sm" id="export-btn">Download config snippet</button>
+      </div>
+
+      <!-- Lodge identity -->
+      <div>
+        <div class="section-title" style="margin-bottom:16px">Lodge Identity</div>
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label>Lodge name</label>
+            <input type="text" id="s-name" placeholder="Nonesi Lodge">
+          </div>
+          <div class="form-group form-full">
+            <label>Tagline</label>
+            <input type="text" id="s-tagline" placeholder="B&B & Self-Catering Accommodation in Komani, Queenstown">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button class="btn btn-primary" id="save-btn-2">Save Settings</button>
       </div>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase.js"></script>
+<script src="js/demo-data.js"></script>
 <script src="js/admin-shell.js"></script>
 <script>
-let sb;
-let settingsData = {};
-
-(async () => {
-  sb = await authGuard();
-  if (!sb) return;
+document.addEventListener('DOMContentLoaded', () => {
   renderShell('settings');
   loadSettings();
-})();
 
-async function loadSettings() {
-  const { data, error } = await sb.from('settings').select('*').order('key');
-  if (error || !data) return;
+  document.getElementById('save-btn').addEventListener('click', saveSettings);
+  document.getElementById('save-btn-2').addEventListener('click', saveSettings);
+});
 
-  settingsData = {};
-  data.forEach(s => settingsData[s.key] = s);
-
-  document.getElementById('settings-form').innerHTML = data.map(s => `
-    <div class="form-group" style="margin-bottom:16px">
-      <label>${s.label || s.key}</label>
-      <input type="text" id="setting-${s.key}" value="${s.value || ''}" data-key="${s.key}">
-    </div>`).join('');
+function loadSettings() {
+  const s = DemoData.getSettings();
+  document.getElementById('s-checkin').value  = s.check_in_time  || '14:00';
+  document.getElementById('s-checkout').value = s.check_out_time || '10:00';
+  document.getElementById('s-phone1').value   = s.phone1   || '';
+  document.getElementById('s-phone2').value   = s.phone2   || '';
+  document.getElementById('s-email').value    = s.email    || '';
+  document.getElementById('s-address').value  = s.address  || '';
+  document.getElementById('s-name').value     = s.lodge_name || '';
+  document.getElementById('s-tagline').value  = s.tagline  || '';
 }
 
-document.getElementById('save-all-btn').addEventListener('click', async () => {
-  const btn = document.getElementById('save-all-btn');
-  btn.disabled = true; btn.textContent = 'Saving…';
-
-  const inputs = document.querySelectorAll('#settings-form input[data-key]');
-  const updates = Array.from(inputs).map(inp => ({
-    key: inp.dataset.key,
-    value: inp.value.trim(),
-  }));
-
-  const { error } = await sb.from('settings').upsert(updates, { onConflict: 'key' });
-  btn.disabled = false; btn.textContent = 'Save all';
-
-  if (error) { showToast('Error: ' + error.message, 'error'); return; }
-  showToast('Settings saved.', 'success');
-  loadSettings();
-});
-
-document.getElementById('change-pwd-btn').addEventListener('click', async () => {
-  const pwd = document.getElementById('new-password').value;
-  if (!pwd || pwd.length < 8) { showToast('Password must be at least 8 characters.', 'error'); return; }
-  const { error } = await sb.auth.updateUser({ password: pwd });
-  if (error) { showToast('Error: ' + error.message, 'error'); return; }
-  showToast('Password changed.', 'success');
-  document.getElementById('new-password').value = '';
-});
-
-document.getElementById('export-btn').addEventListener('click', async () => {
-  const { data } = await sb.from('settings').select('*');
-  if (!data) return;
-
-  const map = {};
-  data.forEach(s => map[s.key] = s.value);
-
-  const snippet = `// Generated from admin settings — ${new Date().toLocaleDateString('en-ZA')}
-// Paste the relevant fields into your template's config.js
-
-CONTACT: {
-  phone1:        "${map.phone1 || ''}",
-  phone2:        "${map.phone2 || ''}",
-  email:         "${map.email || ''}",
-  address_line1: "${(map.address || '').split(',')[0]?.trim() || ''}",
-  address_line2: "${(map.address || '').split(',').slice(1).join(',').trim() || ''}",
-},
-
-// Check-in / check-out
-// Update ABOUT.ticks[0].text and FAQ[0].a manually with:
-// Check-in from ${map.checkin_time || '14:00'} · Check-out by ${map.checkout_time || '10:00'}
-`;
-
-  const blob = new Blob([snippet], { type: 'text/javascript' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'config-update.js';
-  a.click();
-  showToast('Config snippet downloaded.', 'success');
-});
+function saveSettings() {
+  const s = {
+    check_in_time:  document.getElementById('s-checkin').value,
+    check_out_time: document.getElementById('s-checkout').value,
+    phone1:         document.getElementById('s-phone1').value.trim(),
+    phone2:         document.getElementById('s-phone2').value.trim(),
+    email:          document.getElementById('s-email').value.trim(),
+    address:        document.getElementById('s-address').value.trim(),
+    lodge_name:     document.getElementById('s-name').value.trim(),
+    tagline:        document.getElementById('s-tagline').value.trim(),
+  };
+  DemoData.saveSettings(s);
+  showToast('Settings saved!', 'success');
+}
 </script>
 </body>
 </html>

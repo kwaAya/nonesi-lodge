@@ -1,6 +1,6 @@
 /**
  * admin-shell.js
- * Injects the shared nav sidebar into every admin page.
+ * Injects the demo banner + shared nav sidebar into every admin page.
  * Call renderShell(pageId) at the top of each page's script.
  * pageId: 'dashboard' | 'rooms' | 'gallery' | 'inquiries' | 'settings'
  */
@@ -12,7 +12,10 @@ const SHELL_CSS = `
   --bg:#FBF9F5;--surface:#F2EFE8;--ink:#2B2D2F;--muted:#6B6F6C;
   --line:rgba(44,66,53,.12);--sidebar:220px;
 }
-body{background:var(--bg);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;line-height:1.6;color:var(--ink);display:flex;min-height:100svh}
+body{background:var(--bg);font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:14px;line-height:1.6;color:var(--ink);display:flex;flex-direction:column;min-height:100svh}
+
+/* ── DEMO BANNER ── */
+.demo-banner{position:sticky;top:0;z-index:200;background:#FFFBEB;border-bottom:2px solid #F59E0B;color:#92400E;font-size:12px;font-weight:600;padding:10px 32px;display:flex;align-items:center;gap:8px;letter-spacing:0.03em}
 
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar);flex-shrink:0;background:var(--green);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;padding:0}
@@ -58,6 +61,8 @@ tr:hover td{background:rgba(44,66,53,.03)}
 .badge-contacted{background:rgba(44,66,53,.1);color:var(--green)}
 .badge-confirmed{background:rgba(34,139,34,.12);color:#1A6B1A}
 .badge-cancelled{background:rgba(150,150,150,.12);color:var(--muted)}
+.badge-active{background:rgba(34,139,34,.12);color:#1A6B1A}
+.badge-hidden{background:rgba(150,150,150,.12);color:var(--muted)}
 
 /* ── FORMS ── */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -69,7 +74,7 @@ tr:hover td{background:rgba(44,66,53,.03)}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,109,81,.12)}
 
 /* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .2s,opacity .2s}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:10px;border:none;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .2s,opacity .2s;text-decoration:none}
 .btn-primary{background:var(--green);color:#fff}
 .btn-primary:hover{background:var(--gold);transform:translateY(-1px)}
 .btn-gold{background:var(--gold);color:#fff}
@@ -91,6 +96,17 @@ tr:hover td{background:rgba(44,66,53,.03)}
 .modal-close:hover{color:var(--ink)}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;border-top:1px solid var(--line);padding-top:20px}
 
+/* ── ROOM CARDS ── */
+.rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.room-card{background:var(--bg);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.room-card-img{width:100%;height:160px;object-fit:cover;background:var(--surface)}
+.room-card-img-placeholder{width:100%;height:160px;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
+.room-card-body{padding:18px;flex:1;display:flex;flex-direction:column;gap:6px}
+.room-card-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.15rem;color:var(--green)}
+.room-card-price{font-size:13px;font-weight:700;color:var(--gold)}
+.room-card-specs{font-size:12px;color:var(--muted)}
+.room-card-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--line)}
+
 /* ── UPLOAD ZONE ── */
 .upload-zone{border:2px dashed var(--line);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s}
 .upload-zone:hover,.upload-zone.drag-over{border-color:var(--gold);background:rgba(200,109,81,.04)}
@@ -104,6 +120,18 @@ tr:hover td{background:rgba(44,66,53,.03)}
 .gallery-admin-item-actions{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .2s}
 .gallery-admin-item:hover .gallery-admin-item-actions{opacity:1}
 .gallery-admin-item-label{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:600;padding:6px 10px;text-align:center}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filter-btn{padding:7px 16px;border-radius:999px;border:1.5px solid var(--line);background:transparent;font-family:inherit;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+.filter-btn:hover{border-color:var(--green);color:var(--green)}
+.filter-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;z-index:500;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.2);opacity:1;transition:opacity .4s;min-width:220px}
+.toast-success{background:#1A6B1A}
+.toast-info{background:#B35A3E}
+.toast-error{background:#B84040}
 
 /* ── EMPTY STATE ── */
 .empty-state{text-align:center;padding:64px 32px;color:var(--muted)}
@@ -119,6 +147,7 @@ tr:hover td{background:rgba(44,66,53,.03)}
   .topbar{padding:16px 20px}
   .page-body{padding:20px}
   .menu-toggle{display:flex}
+  .demo-banner{padding:10px 16px}
 }
 .menu-toggle{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1.5px solid var(--line);background:none;cursor:pointer;color:var(--ink)}
 `;
@@ -131,6 +160,17 @@ const NAV_ITEMS = [
   { id: 'settings',  label: 'Settings',  href: 'settings.html',  icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>` },
 ];
 
+function signOut() {
+  window.location.href = 'login.html';
+}
+
+function renderDemoBanner() {
+  const banner = document.createElement('div');
+  banner.className = 'demo-banner';
+  banner.innerHTML = `<span>🔒</span> <span>Demo Preview — This is a preview of your admin portal. Data is stored locally in this browser. Contact Aya Core Studios to activate the live version.</span>`;
+  document.body.prepend(banner);
+}
+
 function renderShell(activeId) {
   // Inject shared CSS
   const style = document.createElement('style');
@@ -142,6 +182,9 @@ function renderShell(activeId) {
   gf.rel = 'stylesheet';
   gf.href = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap';
   document.head.insertBefore(gf, document.head.firstChild);
+
+  // Demo banner first
+  renderDemoBanner();
 
   const navHtml = NAV_ITEMS.map(n => `
     <a class="sidebar-link${n.id === activeId ? ' active' : ''}" href="${n.href}">
@@ -164,7 +207,13 @@ function renderShell(activeId) {
       </button>
     </div>`;
 
-  document.body.prepend(sidebar);
+  // Insert sidebar after the banner (which is now body's first child)
+  const banner = document.querySelector('.demo-banner');
+  if (banner && banner.nextSibling) {
+    document.body.insertBefore(sidebar, banner.nextSibling);
+  } else {
+    document.body.appendChild(sidebar);
+  }
 
   // Mobile toggle
   const toggle = document.querySelector('.menu-toggle');
@@ -174,4 +223,26 @@ function renderShell(activeId) {
       if (!sidebar.contains(e.target) && !toggle.contains(e.target)) sidebar.classList.remove('open');
     });
   }
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  return d.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function showToast(message, type = 'success') {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }

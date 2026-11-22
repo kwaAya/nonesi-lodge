@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Inquiries — Admin</title>
+<title>Inquiries — Nonesi Lodge Admin</title>
 </head>
 <body>
 <div class="main">
@@ -12,24 +12,25 @@
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
     <h1 class="topbar-title">Inquiries</h1>
-    <div class="topbar-actions">
-      <select id="status-filter" class="form-group" style="padding:8px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:12px;color:var(--ink);background:var(--bg)">
-        <option value="">All statuses</option>
-        <option value="new">New</option>
-        <option value="contacted">Contacted</option>
-        <option value="confirmed">Confirmed</option>
-        <option value="cancelled">Cancelled</option>
-      </select>
-    </div>
+    <div class="topbar-actions"></div>
   </div>
   <div class="page-body">
-    <p style="color:var(--muted);margin-bottom:24px;font-size:13px">Booking inquiries received via WhatsApp. Update the status as you follow up with each guest.</p>
+    <p style="color:var(--muted);margin-bottom:20px;font-size:13px">Booking inquiries from guests. Update the status as you follow up with each guest.</p>
 
-    <!-- Stats pills -->
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px" id="status-pills"></div>
+    <!-- Filter bar -->
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="">All</button>
+      <button class="filter-btn" data-filter="new">New</button>
+      <button class="filter-btn" data-filter="contacted">Contacted</button>
+      <button class="filter-btn" data-filter="confirmed">Confirmed</button>
+      <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+    </div>
+
+    <!-- Status pills -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px" id="status-pills"></div>
 
     <table>
-      <thead><tr><th>Guest</th><th>Dates</th><th>Room preference</th><th>Status</th><th>Received</th><th>Actions</th></tr></thead>
+      <thead><tr><th>Guest</th><th>Dates</th><th>Room</th><th>Guests</th><th>Status</th><th>Actions</th></tr></thead>
       <tbody id="inquiries-body"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
     </table>
   </div>
@@ -61,112 +62,122 @@
     <div class="modal-actions">
       <a class="btn btn-gold" id="wa-link" href="#" target="_blank">Reply on WhatsApp</a>
       <button type="button" class="btn btn-outline" onclick="closeModal()">Close</button>
-      <button type="button" class="btn btn-primary" id="save-status-btn">Save</button>
+      <button type="button" class="btn btn-primary" id="save-status-btn" onclick="saveInquiry()">Save</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase.js"></script>
+<script src="js/demo-data.js"></script>
 <script src="js/admin-shell.js"></script>
 <script>
-let sb;
-let currentId = null;
-(async () => {
-  sb = await authGuard();
-  if (!sb) return;
+let currentFilter = '';
+let currentId     = null;
+
+document.addEventListener('DOMContentLoaded', () => {
   renderShell('inquiries');
-  loadInquiries();
+  renderPills();
+  renderInquiries();
 
-  document.getElementById('status-filter').addEventListener('change', loadInquiries);
-})();
+  document.getElementById('filter-bar').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderInquiries();
+  });
+});
 
-async function loadInquiries() {
-  const filter = document.getElementById('status-filter').value;
-  let query = sb.from('inquiries').select('*').order('created_at', { ascending: false });
-  if (filter) query = query.eq('status', filter);
-  const { data, error } = await query;
-
-  // Status pills
-  const { data: counts } = await sb.rpc ? await sb.from('inquiries').select('status') : { data: null };
-  renderPills(data);
-
-  const tbody = document.getElementById('inquiries-body');
-  if (error || !data || data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">${error ? 'Error loading.' : 'No inquiries found.'}</td></tr>`;
-    return;
-  }
-
-  tbody.innerHTML = data.map(r => `
-    <tr>
-      <td>
-        <strong>${r.guest_name}</strong><br>
-        <span style="color:var(--muted);font-size:12px">${r.phone || ''}</span><br>
-        <span style="color:var(--muted);font-size:12px">${r.email || ''}</span>
-      </td>
-      <td style="font-size:13px">
-        ${r.check_in || '—'}<br>
-        <span style="color:var(--muted)">→ ${r.check_out || '—'}</span>
-      </td>
-      <td style="font-size:13px">${r.room_pref || '—'}<br><span style="color:var(--muted);font-size:11px">${r.adults || 2} adults${r.children ? ', ' + r.children + ' children' : ''}</span></td>
-      <td><span class="badge badge-${r.status}">${r.status}</span></td>
-      <td style="color:var(--muted);font-size:12px">${formatDate(r.created_at)}</td>
-      <td><button class="btn btn-outline btn-sm" onclick='openDetail(${JSON.stringify(r)})'>View</button></td>
-    </tr>`).join('');
-}
-
-function renderPills(data) {
-  if (!data) return;
+function renderPills() {
+  const inquiries = DemoData.getInquiries();
   const counts = { new: 0, contacted: 0, confirmed: 0, cancelled: 0 };
-  data.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
+  inquiries.forEach(r => { if (counts[r.status] !== undefined) counts[r.status]++; });
   const colors = { new: 'badge-new', contacted: 'badge-contacted', confirmed: 'badge-confirmed', cancelled: 'badge-cancelled' };
   document.getElementById('status-pills').innerHTML = Object.entries(counts)
     .map(([s, c]) => `<span class="badge ${colors[s]}" style="font-size:12px;padding:5px 14px">${s}: ${c}</span>`).join('');
 }
 
-function openDetail(r) {
+function renderInquiries() {
+  const all = DemoData.getInquiries()
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  const filtered = currentFilter ? all.filter(r => r.status === currentFilter) : all;
+
+  const tbody = document.getElementById('inquiries-body');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No inquiries found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td>
+        <strong>${r.guest_name}</strong><br>
+        <span style="color:var(--muted);font-size:12px">${r.phone || ''}</span>
+      </td>
+      <td style="font-size:12px">
+        ${formatDate(r.check_in)}<br>
+        <span style="color:var(--muted)">→ ${formatDate(r.check_out)}</span>
+      </td>
+      <td style="font-size:12px">${r.room_pref || '—'}</td>
+      <td style="font-size:12px">${r.adults} adult${r.adults !== 1 ? 's' : ''}${r.children ? ', ' + r.children + ' child' + (r.children !== 1 ? 'ren' : '') : ''}</td>
+      <td><span class="badge badge-${r.status}">${r.status}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick='openDetail(${r.id})'>View / Edit</button></td>
+    </tr>`).join('');
+}
+
+function openDetail(id) {
+  const r = DemoData.getInquiries().find(i => i.id === id);
+  if (!r) return;
   currentId = r.id;
+
   document.getElementById('modal-guest-name').textContent = r.guest_name;
-  document.getElementById('edit-status').value  = r.status;
-  document.getElementById('edit-notes').value   = r.notes || '';
+  document.getElementById('edit-status').value = r.status;
+  document.getElementById('edit-notes').value  = r.notes || '';
 
   const phone = r.phone || '';
   const waNum = phone.replace(/\D/g, '');
   const waMsg = encodeURIComponent(`Hi ${r.guest_name}, thank you for your inquiry at Nonesi Lodge. `);
-  document.getElementById('wa-link').href = waNum ? `https://wa.me/${waNum.startsWith('0') ? '27' + waNum.slice(1) : waNum}?text=${waMsg}` : '#';
-  if (!waNum) document.getElementById('wa-link').style.opacity = '0.4';
+  const waHref = waNum ? `https://wa.me/${waNum.startsWith('0') ? '27' + waNum.slice(1) : waNum}?text=${waMsg}` : '#';
+  document.getElementById('wa-link').href = waHref;
+  document.getElementById('wa-link').style.opacity = waNum ? '1' : '0.4';
 
-  const field = (label, value) => value ? `<div><div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">${label}</div><div style="font-size:13px;color:var(--ink)">${value}</div></div>` : '';
+  const field = (label, value) => value !== undefined && value !== null && value !== ''
+    ? `<div><div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px">${label}</div><div style="font-size:13px;color:var(--ink)">${value}</div></div>` : '';
+
   document.getElementById('modal-body').innerHTML = [
     field('Phone', r.phone),
     field('Email', r.email),
-    field('Check-in', r.check_in),
-    field('Check-out', r.check_out),
+    field('Check-in', formatDate(r.check_in)),
+    field('Check-out', formatDate(r.check_out)),
     field('Adults', r.adults),
     field('Children', r.children),
     field('Room preference', r.room_pref),
-    field('Message', r.message),
-    field('Source', r.source),
+    field('Notes', r.notes),
     field('Received', formatDate(r.created_at)),
   ].join('');
 
   document.getElementById('modal').classList.add('open');
 }
 
-document.getElementById('save-status-btn').addEventListener('click', async () => {
-  if (!currentId) return;
-  const { error } = await sb.from('inquiries').update({
-    status: document.getElementById('edit-status').value,
-    notes:  document.getElementById('edit-notes').value.trim(),
-  }).eq('id', currentId);
-
-  if (error) { showToast('Error: ' + error.message, 'error'); return; }
+function saveInquiry() {
+  if (currentId === null) return;
+  const inquiries = DemoData.getInquiries();
+  const idx = inquiries.findIndex(i => i.id === currentId);
+  if (idx === -1) return;
+  inquiries[idx].status = document.getElementById('edit-status').value;
+  inquiries[idx].notes  = document.getElementById('edit-notes').value.trim();
+  DemoData.saveInquiries(inquiries);
   showToast('Inquiry updated.', 'success');
   closeModal();
-  loadInquiries();
-});
+  renderPills();
+  renderInquiries();
+}
 
-function closeModal() { document.getElementById('modal').classList.remove('open'); currentId = null; }
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  currentId = null;
+}
 </script>
 </body>
 </html>

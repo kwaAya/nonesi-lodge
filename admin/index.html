@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dashboard — Admin</title>
+<title>Dashboard — Nonesi Lodge Admin</title>
 </head>
 <body>
 <div class="main">
@@ -45,47 +45,40 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase.js"></script>
+<script src="js/demo-data.js"></script>
 <script src="js/admin-shell.js"></script>
 <script>
-(async () => {
-  const sb = await authGuard();
-  if (!sb) return;
+document.addEventListener('DOMContentLoaded', () => {
   renderShell('dashboard');
 
-  const statusBadge = s => `<span class="badge badge-${s}">${s}</span>`;
+  const rooms      = DemoData.getRooms();
+  const gallery    = DemoData.getGallery();
+  const inquiries  = DemoData.getInquiries();
 
-  // Load stats
-  const [roomsRes, galleryRes, inquiriesRes, newRes] = await Promise.all([
-    sb.from('rooms').select('id', { count: 'exact' }).eq('active', true),
-    sb.from('gallery').select('id', { count: 'exact' }),
-    sb.from('inquiries').select('id', { count: 'exact' }),
-    sb.from('inquiries').select('id', { count: 'exact' }).eq('status', 'new'),
-  ]);
-  document.getElementById('stat-rooms').textContent   = roomsRes.count ?? '—';
-  document.getElementById('stat-gallery').textContent = galleryRes.count ?? '—';
-  document.getElementById('stat-total').textContent   = inquiriesRes.count ?? '—';
-  document.getElementById('stat-new').textContent     = newRes.count ?? '—';
+  document.getElementById('stat-rooms').textContent   = rooms.filter(r => r.active).length;
+  document.getElementById('stat-gallery').textContent = gallery.length;
+  document.getElementById('stat-new').textContent     = inquiries.filter(i => i.status === 'new').length;
+  document.getElementById('stat-total').textContent   = inquiries.length;
 
-  // Recent inquiries (last 8)
-  const { data: recent } = await sb.from('inquiries')
-    .select('*').order('created_at', { ascending: false }).limit(8);
+  const recent = inquiries
+    .slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 8);
 
   const tbody = document.getElementById('recent-body');
-  if (!recent || recent.length === 0) {
+  if (recent.length === 0) {
     tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">No inquiries yet.</td></tr>`;
   } else {
     tbody.innerHTML = recent.map(r => `
       <tr>
-        <td><strong>${r.guest_name}</strong><br><span style="color:var(--muted);font-size:12px">${r.phone || r.email || '—'}</span></td>
-        <td>${r.check_in || '—'} → ${r.check_out || '—'}</td>
-        <td>${r.room_pref || '—'}</td>
-        <td>${statusBadge(r.status)}</td>
+        <td><strong>${r.guest_name}</strong><br><span style="color:var(--muted);font-size:12px">${r.phone || '—'}</span></td>
+        <td style="font-size:12px">${formatDate(r.check_in)} → ${formatDate(r.check_out)}</td>
+        <td style="font-size:12px">${r.room_pref || '—'}</td>
+        <td><span class="badge badge-${r.status}">${r.status}</span></td>
         <td style="color:var(--muted);font-size:12px">${formatDate(r.created_at)}</td>
       </tr>`).join('');
   }
-})();
+});
 </script>
 </body>
 </html>

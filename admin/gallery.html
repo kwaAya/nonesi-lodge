@@ -3,11 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gallery — Admin</title>
-<style>
-.upload-progress{height:4px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:8px;display:none}
-.upload-progress-bar{height:100%;background:var(--gold);transition:width .3s ease;width:0%}
-</style>
+<title>Gallery — Nonesi Lodge Admin</title>
 </head>
 <body>
 <div class="main">
@@ -17,25 +13,16 @@
     </button>
     <h1 class="topbar-title">Gallery</h1>
     <div class="topbar-actions">
-      <button class="btn btn-primary btn-sm" onclick="document.getElementById('file-input').click()">+ Upload photos</button>
+      <button class="btn btn-outline btn-sm" onclick="showUploadNotice()">↑ Upload</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Photo</button>
     </div>
   </div>
   <div class="page-body">
+    <p style="color:var(--muted);margin-bottom:8px;font-size:13px">Manage gallery images. The first 6 mosaic photos appear on the homepage.</p>
 
-    <!-- Upload zone -->
-    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto;color:var(--muted)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      <p><strong>Click to upload</strong> or drag photos here</p>
-      <p style="font-size:11px;margin-top:4px">JPG, PNG, WebP — max 10 MB each</p>
-      <input type="file" id="file-input" accept="image/*" multiple style="display:none">
-      <div class="upload-progress" id="upload-progress">
-        <div class="upload-progress-bar" id="progress-bar"></div>
-      </div>
-    </div>
-
-    <div class="section-header" style="margin-top:32px">
+    <div class="section-header" style="margin-top:24px">
       <span class="section-title" id="gallery-count">Photos</span>
-      <span style="font-size:12px;color:var(--muted)">First 6 (sorted by order) show in the homepage mosaic</span>
+      <span style="font-size:12px;color:var(--muted)">First 6 (by sort order) show in the homepage mosaic</span>
     </div>
     <div class="gallery-admin-grid" id="gallery-grid">
       <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Loading…</div>
@@ -43,38 +30,38 @@
   </div>
 </div>
 
-<!-- EDIT MODAL -->
+<!-- ADD / EDIT MODAL -->
 <div class="modal-backdrop" id="modal">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">Edit photo</span>
+      <span class="modal-title" id="modal-title">Add Photo</span>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
-    <div style="margin-bottom:20px">
+    <div id="modal-preview-wrap" style="margin-bottom:20px;display:none">
       <img id="modal-preview" src="" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--surface)">
     </div>
-    <form id="edit-form">
-      <input type="hidden" id="edit-id">
+    <form id="photo-form">
+      <input type="hidden" id="f-id">
       <div class="form-grid">
-        <div class="form-group">
+        <div class="form-group form-full">
+          <label>Image path</label>
+          <input type="text" id="f-src" required placeholder="../images/gallery-pool.png">
+        </div>
+        <div class="form-group form-full">
           <label>Caption</label>
-          <input type="text" id="edit-caption" placeholder="Lodge & Pool">
+          <input type="text" id="f-caption" placeholder="Garden & Pool">
         </div>
         <div class="form-group">
-          <label>Alt text (accessibility)</label>
-          <input type="text" id="edit-alt" placeholder="Thatched lounge and pool">
-        </div>
-        <div class="form-group">
-          <label>Sort order (lower = shown first)</label>
-          <input type="number" id="edit-order" value="0" min="0">
+          <label>Sort order</label>
+          <input type="number" id="f-order" value="99" min="1">
         </div>
         <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:22px">
-          <input type="checkbox" id="edit-mosaic" checked style="width:18px;height:18px;accent-color:var(--green)">
-          <label for="edit-mosaic" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:0">Show in homepage mosaic</label>
+          <input type="checkbox" id="f-mosaic" checked style="width:18px;height:18px;accent-color:var(--green)">
+          <label for="f-mosaic" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:0">Show in homepage mosaic</label>
         </div>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn btn-danger" id="delete-btn">Delete photo</button>
+        <button type="button" class="btn btn-danger" id="delete-photo-btn" style="display:none" onclick="deleteCurrentPhoto()">Delete photo</button>
         <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
         <button type="submit" class="btn btn-primary">Save</button>
       </div>
@@ -82,122 +69,115 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supabase.js"></script>
+<script src="js/demo-data.js"></script>
 <script src="js/admin-shell.js"></script>
 <script>
-let sb;
-(async () => {
-  sb = await authGuard();
-  if (!sb) return;
+document.addEventListener('DOMContentLoaded', () => {
   renderShell('gallery');
-  loadGallery();
-  setupUpload();
-})();
+  renderGallery();
+});
 
-async function loadGallery() {
-  const { data, error } = await sb.from('gallery').select('*').order('sort_order');
-  const grid = document.getElementById('gallery-grid');
-  if (error) { grid.innerHTML = '<div style="color:var(--muted);padding:40px;text-align:center">Error loading gallery.</div>'; return; }
-  document.getElementById('gallery-count').textContent = `Photos (${data?.length || 0})`;
-  if (!data || data.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No photos yet. Upload some above.</div>';
+let editingId = null;
+
+function renderGallery() {
+  const photos = DemoData.getGallery().slice().sort((a, b) => a.sort_order - b.sort_order);
+  const grid   = document.getElementById('gallery-grid');
+  document.getElementById('gallery-count').textContent = `Photos (${photos.length})`;
+
+  if (photos.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><h3>No photos yet</h3><p>Add photos using the button above.</p></div>`;
     return;
   }
-  grid.innerHTML = data.map(p => `
-    <div class="gallery-admin-item" onclick='openEdit(${JSON.stringify(p)})'>
-      <img src="${p.url}" alt="${p.alt || ''}">
+
+  grid.innerHTML = photos.map(p => `
+    <div class="gallery-admin-item">
+      <img src="${p.src}" alt="${p.caption || ''}" onerror="this.style.opacity='.3'">
       <div class="gallery-admin-item-actions">
-        <button class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,.4)">Edit</button>
+        <button class="btn btn-outline btn-sm" style="color:#fff;border-color:rgba(255,255,255,.4)" onclick="openEditModal(${p.id})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePhoto(${p.id})">Delete</button>
       </div>
       <div class="gallery-admin-item-label">${p.caption || ''}</div>
       ${p.in_mosaic ? '<span style="position:absolute;top:8px;right:8px;background:var(--gold);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.08em">MOSAIC</span>' : ''}
     </div>`).join('');
 }
 
-function setupUpload() {
-  const zone  = document.getElementById('upload-zone');
-  const input = document.getElementById('file-input');
-
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); uploadFiles(e.dataTransfer.files); });
-  input.addEventListener('change', () => uploadFiles(input.files));
+function openAddModal() {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'Add Photo';
+  document.getElementById('f-id').value = '';
+  document.getElementById('f-src').value = '';
+  document.getElementById('f-caption').value = '';
+  document.getElementById('f-order').value = '99';
+  document.getElementById('f-mosaic').checked = true;
+  document.getElementById('modal-preview-wrap').style.display = 'none';
+  document.getElementById('delete-photo-btn').style.display = 'none';
+  document.getElementById('modal').classList.add('open');
 }
 
-async function uploadFiles(files) {
-  if (!files || files.length === 0) return;
-  const prog = document.getElementById('upload-progress');
-  const bar  = document.getElementById('progress-bar');
-  prog.style.display = 'block';
+function openEditModal(id) {
+  const photo = DemoData.getGallery().find(p => p.id === id);
+  if (!photo) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = 'Edit Photo';
+  document.getElementById('f-id').value      = photo.id;
+  document.getElementById('f-src').value     = photo.src;
+  document.getElementById('f-caption').value = photo.caption || '';
+  document.getElementById('f-order').value   = photo.sort_order;
+  document.getElementById('f-mosaic').checked = !!photo.in_mosaic;
+  document.getElementById('modal-preview').src = photo.src;
+  document.getElementById('modal-preview-wrap').style.display = 'block';
+  document.getElementById('delete-photo-btn').style.display = 'inline-flex';
+  document.getElementById('modal').classList.add('open');
+}
 
-  let done = 0;
-  for (const file of files) {
-    const ext  = file.name.split('.').pop();
-    const path = `gallery/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  editingId = null;
+}
 
-    const { error: uploadErr } = await sb.storage.from('gallery').upload(path, file, { cacheControl: '3600', upsert: false });
-    if (uploadErr) { showToast(`Upload failed: ${file.name}`, 'error'); done++; continue; }
+function deleteCurrentPhoto() {
+  if (editingId === null) return;
+  deletePhoto(editingId);
+  closeModal();
+}
 
-    const { data: { publicUrl } } = sb.storage.from('gallery').getPublicUrl(path);
+function deletePhoto(id) {
+  if (!confirm('Delete this photo? This cannot be undone.')) return;
+  const gallery = DemoData.getGallery().filter(p => p.id !== id);
+  DemoData.saveGallery(gallery);
+  renderGallery();
+  showToast('Photo deleted.', 'success');
+}
 
-    await sb.from('gallery').insert({
-      url:        publicUrl,
-      alt:        file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
-      caption:    '',
-      in_mosaic:  true,
-      sort_order: 99,
-    });
+document.getElementById('photo-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const gallery = DemoData.getGallery();
+  const idVal   = document.getElementById('f-id').value;
+  const id      = idVal ? parseInt(idVal) : null;
 
-    done++;
-    bar.style.width = `${(done / files.length) * 100}%`;
+  const payload = {
+    id:         id || (gallery.length > 0 ? Math.max(...gallery.map(p => p.id)) + 1 : 1),
+    src:        document.getElementById('f-src').value.trim(),
+    caption:    document.getElementById('f-caption').value.trim(),
+    sort_order: parseInt(document.getElementById('f-order').value) || 99,
+    in_mosaic:  document.getElementById('f-mosaic').checked,
+  };
+
+  if (id) {
+    const idx = gallery.findIndex(p => p.id === id);
+    if (idx !== -1) gallery[idx] = payload;
+  } else {
+    gallery.push(payload);
   }
 
-  showToast(`${done} photo${done === 1 ? '' : 's'} uploaded.`, 'success');
-  setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0%'; }, 1500);
-  document.getElementById('file-input').value = '';
-  loadGallery();
-}
-
-function openEdit(photo) {
-  document.getElementById('modal').classList.add('open');
-  document.getElementById('edit-id').value      = photo.id;
-  document.getElementById('edit-caption').value = photo.caption || '';
-  document.getElementById('edit-alt').value     = photo.alt || '';
-  document.getElementById('edit-order').value   = photo.sort_order ?? 99;
-  document.getElementById('edit-mosaic').checked= !!photo.in_mosaic;
-  document.getElementById('modal-preview').src  = photo.url;
-
-  document.getElementById('delete-btn').onclick = () => deletePhoto(photo.id, photo.url);
-}
-
-function closeModal() { document.getElementById('modal').classList.remove('open'); }
-
-document.getElementById('edit-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const id = document.getElementById('edit-id').value;
-  const { error } = await sb.from('gallery').update({
-    caption:    document.getElementById('edit-caption').value.trim(),
-    alt:        document.getElementById('edit-alt').value.trim(),
-    sort_order: parseInt(document.getElementById('edit-order').value) || 99,
-    in_mosaic:  document.getElementById('edit-mosaic').checked,
-  }).eq('id', id);
-
-  if (error) { showToast('Error: ' + error.message, 'error'); return; }
-  showToast('Photo updated.', 'success');
+  DemoData.saveGallery(gallery);
   closeModal();
-  loadGallery();
+  renderGallery();
+  showToast(id ? 'Photo updated.' : 'Photo added.', 'success');
 });
 
-async function deletePhoto(id, url) {
-  if (!confirm('Delete this photo permanently?')) return;
-  // Extract storage path from public URL to remove from storage
-  const path = url.split('/gallery/').pop();
-  if (path) await sb.storage.from('gallery').remove([`gallery/${path}`]);
-  await sb.from('gallery').delete().eq('id', id);
-  showToast('Photo deleted.', 'success');
-  closeModal();
-  loadGallery();
+function showUploadNotice() {
+  showToast("In the live version, you'll be able to upload photos directly. For now, enter the image path manually.", 'info');
 }
 </script>
 </body>
