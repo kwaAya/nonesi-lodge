@@ -4,6 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rooms — Nonesi Lodge Admin</title>
+<style>
+/* Anti-FOUC: set background and hide body until shell CSS is injected */
+:root{--green:#2C4235;--gold:#C86D51;--bg:#FBF9F5;--surface:#F2EFE8;--sidebar:220px}
+html{background:var(--bg)}
+body{visibility:hidden;background:var(--bg);margin:0;font-family:system-ui,sans-serif}
+body.ready{visibility:visible}
+
+/* Room detail drawer */
+.room-drawer-backdrop{position:fixed;inset:0;background:rgba(10,16,12,.5);backdrop-filter:blur(6px);z-index:500;display:none;align-items:flex-end;justify-content:flex-end}
+.room-drawer-backdrop.open{display:flex}
+.room-drawer{background:var(--bg);width:100%;max-width:480px;height:100%;overflow-y:auto;box-shadow:-20px 0 60px rgba(0,0,0,.2);display:flex;flex-direction:column}
+@media(max-width:600px){.room-drawer{max-width:100%;height:85vh;border-radius:20px 20px 0 0}}
+.room-drawer-img{width:100%;aspect-ratio:16/9;object-fit:cover;flex-shrink:0;background:var(--surface)}
+.room-drawer-body{padding:28px 28px 40px;flex:1}
+.room-drawer-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.room-drawer-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;color:var(--green);margin-bottom:4px;line-height:1.1}
+.room-drawer-price{font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;color:var(--gold);margin-bottom:16px}
+.room-drawer-specs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.room-drawer-specs span{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(44,66,53,.08);color:var(--green);padding:5px 12px;border-radius:999px}
+.room-drawer-desc{font-size:14px;line-height:1.72;color:#6B6F6C;margin-bottom:20px}
+.room-drawer-amenities{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px}
+.room-drawer-amenities li{font-size:13px;color:#2B2D2F;display:flex;align-items:center;gap:10px}
+.room-drawer-amenities li::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0}
+.room-drawer-actions{display:flex;gap:10px;padding-top:20px;border-top:1px solid rgba(44,66,53,.11)}
+.room-drawer-close{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.35);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+</style>
 </head>
 <body>
 <div class="main">
@@ -81,11 +107,35 @@
   </div>
 </div>
 
+<!-- ROOM DETAIL DRAWER -->
+<div class="room-drawer-backdrop" id="room-drawer-backdrop" onclick="if(event.target===this)closeDrawer()">
+  <div class="room-drawer" id="room-drawer">
+    <div style="position:relative">
+      <img id="drawer-img" src="" alt="" class="room-drawer-img">
+      <button class="room-drawer-close" onclick="closeDrawer()">&times;</button>
+    </div>
+    <div class="room-drawer-body">
+      <div class="room-drawer-eyebrow">Accommodation</div>
+      <div class="room-drawer-name" id="drawer-name"></div>
+      <div class="room-drawer-price" id="drawer-price"></div>
+      <div class="room-drawer-specs" id="drawer-specs"></div>
+      <p class="room-drawer-desc" id="drawer-desc"></p>
+      <ul class="room-drawer-amenities" id="drawer-amenities"></ul>
+      <div id="drawer-status" style="margin-bottom:20px"></div>
+      <div class="room-drawer-actions">
+        <button class="btn btn-primary" id="drawer-edit-btn">Edit this room</button>
+        <button class="btn btn-outline" onclick="closeDrawer()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="js/demo-data.js"></script>
 <script src="js/admin-shell.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   renderShell('rooms');
+  document.body.classList.add('ready');
   renderRooms();
 });
 
@@ -97,7 +147,7 @@ function renderRooms() {
     return;
   }
   grid.innerHTML = rooms.map(r => `
-    <div class="room-card">
+    <div class="room-card" onclick="openDrawer(${r.id})" style="cursor:pointer">
       ${r.image
         ? `<img class="room-card-img" src="${r.image}" alt="${r.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
         : ''}
@@ -109,14 +159,48 @@ function renderRooms() {
         <div class="room-card-specs" style="margin-top:2px">${r.bathroom}</div>
         <div style="margin-top:8px"><span class="badge ${r.active ? 'badge-active' : 'badge-hidden'}">${r.active ? 'Active' : 'Hidden'}</span></div>
       </div>
-      <div class="room-card-actions">
+      <div class="room-card-actions" onclick="event.stopPropagation()">
         <button class="btn btn-outline btn-sm" style="flex:1" onclick="editRoom(${r.id})">Edit</button>
         <button class="btn btn-danger btn-sm" onclick="deleteRoom(${r.id})">Delete</button>
       </div>
     </div>`).join('');
 }
 
-function openModal(room) {
+function openDrawer(id) {
+  const r = DemoData.getRooms().find(r => r.id === id);
+  if (!r) return;
+  const backdrop = document.getElementById('room-drawer-backdrop');
+  const drawer   = document.getElementById('room-drawer');
+
+  document.getElementById('drawer-img').src       = r.image || '';
+  document.getElementById('drawer-img').style.display = r.image ? 'block' : 'none';
+  document.getElementById('drawer-name').textContent  = r.name;
+  document.getElementById('drawer-price').textContent = `From R${r.price} / night`;
+  document.getElementById('drawer-specs').innerHTML   = [
+    `Sleeps ${r.sleeps}`, `${r.size_m2} m²`, r.bed_type, r.bathroom
+  ].filter(Boolean).map(s => `<span>${s}</span>`).join('');
+  document.getElementById('drawer-desc').textContent  = r.description || '';
+  document.getElementById('drawer-desc').style.display = r.description ? 'block' : 'none';
+
+  const ami = Array.isArray(r.amenities) && r.amenities.length
+    ? r.amenities
+    : ['Free Wi-Fi', 'Flat-screen TV with Netflix', 'Work desk', 'Fridge, microwave & kettle', 'Heating'];
+  document.getElementById('drawer-amenities').innerHTML = ami.map(a =>
+    `<li>${typeof a === 'object' ? a.text : a}</li>`).join('');
+
+  document.getElementById('drawer-status').innerHTML =
+    `<span class="badge ${r.active ? 'badge-active' : 'badge-hidden'}">${r.active ? 'Active' : 'Hidden'}</span>`;
+  document.getElementById('drawer-edit-btn').onclick = () => { closeDrawer(); editRoom(id); };
+
+  backdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrawer() {
+  document.getElementById('room-drawer-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
   document.getElementById('modal').classList.add('open');
   document.getElementById('modal-title').textContent = room ? 'Edit Room' : 'Add Room';
   document.getElementById('f-id').value       = room ? room.id : '';

@@ -1,9 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inquiries — Nonesi Lodge Admin</title>
+<style>
+:root{--green:#2C4235;--gold:#C86D51;--bg:#FBF9F5;--surface:#F2EFE8;--sidebar:220px}
+html{background:var(--bg)}
+body{visibility:hidden;background:var(--bg);margin:0;font-family:system-ui,sans-serif}
+body.ready{visibility:visible}
+</style>
 </head>
 <body>
 <div class="main">
@@ -77,6 +83,7 @@ let currentId     = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   renderShell('inquiries');
+  document.body.classList.add('ready');
   renderPills();
   renderInquiries();
 

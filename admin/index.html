@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard — Nonesi Lodge Admin</title>
+<style>
+:root{--green:#2C4235;--gold:#C86D51;--bg:#FBF9F5;--surface:#F2EFE8;--sidebar:220px}
+html{background:var(--bg)}
+body{visibility:hidden;background:var(--bg);margin:0;font-family:system-ui,sans-serif}
+body.ready{visibility:visible}
+</style>
 </head>
 <body>
 <div class="main">
@@ -53,6 +59,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   renderShell('dashboard');
+  document.body.classList.add('ready');
 
   const h = new Date().getHours();
   const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
